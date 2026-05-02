@@ -628,6 +628,29 @@
 </style>
 </head>
 <body>
+  <!-- BANNER RAINBOW -->
+<div id="rainbow-banner" style="
+  position:fixed; top:0; left:0; right:0; z-index:99999;
+  background: linear-gradient(90deg, #ff0080, #ff8800, #ffcc00, #00ff88, #00cfff, #8888ff, #ff0080);
+  background-size: 200% 100%;
+  animation: rainbowMove 3s linear infinite;
+  padding: 5px 0;
+  text-align: center;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: #000;
+  font-weight: bold;
+">
+  ⚡ moodOS está en desarrollo activo · v2.0 estable · v3.0 en camino · más features pronto ⚡
+</div>
+<style>
+@keyframes rainbowMove {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 200% 50%; }
+}
+#boot, #mood-select, #os { padding-top: 28px; }
+</style>
  
 <!-- ══════════════ BOOT SCREEN ══════════════ -->
 <div id="boot">
