@@ -1,23 +1,20 @@
-/* --- ESTILOS PARA EL BANNER DE MOOD OS --- */
-
-/* Contenedor de la imagen (aplica la animación) */
+/* Estilos para el banner de MOOD OS */
 .mood-banner-container {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeInUp 0.8s ease forwards;
-    animation-delay: 1.3s; /* Aparece justo después del título */
     width: 100%;
-    max-width: 450px; /* Mismo ancho que tus botones */
-    margin-bottom: 25px; /* Espacio antes de los enlaces */
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    background: rgba(10, 10, 10, 0.8);
+    border: 2px solid #00ff88;
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
+    border-radius: 8px;
     text-align: center;
 }
 
-/* La imagen en sí */
 .mood-banner-img {
-    width: 100%;
+    max-width: 100%;
     height: auto;
-    border-radius: 12px; /* Bordes redondeados como tus botones */
-    border: 1px solid #2a2a2a; /* Borde oscuro sutil */
-    box-shadow: 0 0 15px rgba(0, 255, 65, 0.15); /* Un ligero brillo verde neón */
     display: block;
+    margin: 0 auto;
+    image-rendering: pixelated; /* Mantiene el estilo pixel art nítido */
 }
