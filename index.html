@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="icon" href="moodOS.png" type="image/png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -758,8 +759,9 @@
       <div class="chart-wrap" id="histChart"></div>
       <div class="history-list" id="historyList"></div>
       <div style="display:flex;gap:0.5rem;margin-top:0.75rem">
-        <button class="btn sm info" onclick="exportJSON()">↓ JSON</button>
-        <button class="btn sm" onclick="exportTXT()">↓ TXT</button>
+       <button class="btn sm info" onclick="exportJSON()">↓ JSON</button>
+<button class="btn sm" onclick="exportTXT()">↓ TXT</button>
+<button class="btn sm purple" onclick="exportPNG()">↓ PNG</button>
       </div>
     </div>
 
@@ -1441,6 +1443,186 @@ function exportTXT(){
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
   a.download=`moodOS_reporte_${new Date().toISOString().slice(0,10)}.txt`; a.click();
   showNotif('Datos exportados como TXT');
+}
+
+async function exportPNG() {
+  showNotif('Generando resumen PNG...');
+
+  // Crear canvas de resumen
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 600;
+  const ctx = canvas.getContext('2d');
+
+  const bg = '#000000';
+  const accent = moodData[currentMood]?.color || '#00ff88';
+  const name = localStorage.getItem('moodUserName') || 'anónimo';
+  const history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+  const tasks = JSON.parse(localStorage.getItem('moodTasks') || '[]');
+  const habits = JSON.parse(localStorage.getItem('moodHabits') || '[]');
+  const diary = JSON.parse(localStorage.getItem('moodDiary') || '[]');
+  const data = moodData[currentMood];
+
+  // Fondo
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, 800, 600);
+
+  // Scanlines decorativas
+  ctx.fillStyle = 'rgba(0,255,136,0.015)';
+  for (let y = 0; y < 600; y += 4) ctx.fillRect(0, y, 800, 2);
+
+  // Borde exterior
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(16, 16, 768, 568);
+
+  // Header
+  ctx.fillStyle = accent;
+  ctx.fillRect(16, 16, 768, 56);
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 22px monospace';
+  ctx.fillText('moodOS v2.0 — RESUMEN EMOCIONAL', 32, 52);
+  ctx.font = '12px monospace';
+  ctx.fillStyle = '#000';
+  ctx.fillText(new Date().toLocaleString('es'), 580, 52);
+
+  // Nombre
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '13px monospace';
+  ctx.fillText('// usuario: ' + name, 32, 92);
+  ctx.fillStyle = accent;
+  ctx.fillText('// fecha: ' + new Date().toLocaleDateString('es'), 400, 92);
+
+  // Línea separadora
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(32, 105); ctx.lineTo(768, 105); ctx.stroke();
+
+  // — Sección: Estado actual —
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('[ ESTADO ACTUAL ]', 32, 125);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '32px monospace';
+  ctx.fillText(data.emoji, 32, 165);
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 20px monospace';
+  ctx.fillText(data.name, 72, 162);
+  ctx.fillStyle = '#555';
+  ctx.font = '11px monospace';
+  ctx.fillText('ÁNIMO: ' + data.level + '%  ENERGÍA: ' + data.energy + '%  ENFOQUE: ' + data.focus + '%', 72, 178);
+
+  // Barras de stats
+  const barY = 190;
+  [
+    { label: 'ÁNIMO', val: data.level, color: accent },
+    { label: 'ENERGÍA', val: data.energy, color: '#00cfff' },
+    { label: 'ENFOQUE', val: data.focus, color: '#ffcc00' },
+  ].forEach((bar, i) => {
+    const x = 32 + i * 230;
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x, barY, 200, 6);
+    ctx.fillStyle = bar.color;
+    ctx.fillRect(x, barY, bar.val * 2, 6);
+    ctx.fillStyle = '#555';
+    ctx.font = '10px monospace';
+    ctx.fillText(bar.label, x, barY + 18);
+  });
+
+  // Línea separadora
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.beginPath(); ctx.moveTo(32, 220); ctx.lineTo(768, 220); ctx.stroke();
+
+  // — Sección: Estadísticas —
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('[ ESTADÍSTICAS ]', 32, 240);
+
+  const counts = {};
+  history.forEach(h => counts[h.mood] = (counts[h.mood] || 0) + 1);
+  const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  let streak = 0;
+  const days = new Set(history.map(h => new Date(h.time).toDateString()));
+  let d = new Date();
+  while (days.has(d.toDateString())) { streak++; d.setDate(d.getDate() - 1); }
+  const doneTasks = tasks.filter(t => t.done).length;
+  const habitPct = habits.length
+    ? Math.round(habits.reduce((a, h) => a + h.days.filter(x => x).length, 0) / (habits.length * 7) * 100)
+    : 0;
+
+  const stats = [
+    { label: 'ENTRADAS MOOD', val: history.length },
+    { label: 'RACHA ACTUAL', val: streak + ' días' },
+    { label: 'MEJOR MOOD', val: best ? moodData[best[0]]?.emoji + ' ' + moodData[best[0]]?.name : '—' },
+    { label: 'TAREAS HECHAS', val: doneTasks + '/' + tasks.length },
+    { label: 'HÁBITOS SEMANA', val: habitPct + '%' },
+    { label: 'ENTRADAS DIARIO', val: diary.length },
+  ];
+  stats.forEach((s, i) => {
+    const col = i % 3; const row = Math.floor(i / 3);
+    const x = 32 + col * 245; const y = 260 + row * 50;
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x, y, 230, 38);
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.strokeRect(x, y, 230, 38);
+    ctx.fillStyle = accent;
+    ctx.font = 'bold 16px monospace';
+    ctx.fillText(String(s.val), x + 10, y + 22);
+    ctx.fillStyle = '#555';
+    ctx.font = '9px monospace';
+    ctx.fillText(s.label, x + 10, y + 34);
+  });
+
+  // Línea separadora
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.beginPath(); ctx.moveTo(32, 368); ctx.lineTo(768, 368); ctx.stroke();
+
+  // — Sección: Historial visual (barras 7 días) —
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('[ HISTORIAL — ÚLTIMOS 7 DÍAS ]', 32, 388);
+
+  const dayMap = {};
+  history.forEach(h => {
+    const k = new Date(h.time).toLocaleDateString('es', { weekday: 'short' });
+    if (!dayMap[k]) dayMap[k] = [];
+    dayMap[k].push(h.mood);
+  });
+  for (let i = 6; i >= 0; i--) {
+    const dd = new Date(); dd.setDate(dd.getDate() - i);
+    const k = dd.toLocaleDateString('es', { weekday: 'short' });
+    const entries = dayMap[k] || [];
+    const avg = entries.length
+      ? entries.reduce((a, b) => a + (moodData[b]?.level || 50), 0) / entries.length
+      : 0;
+    const barH = Math.max(4, avg * 0.6);
+    const x = 32 + (6 - i) * 100;
+    const barColor = avg > 60 ? '#00ff88' : avg > 35 ? '#ffcc00' : avg > 0 ? '#ff3355' : '#222';
+    ctx.fillStyle = barColor;
+    ctx.fillRect(x, 460 - barH, 80, barH);
+    ctx.fillStyle = '#555';
+    ctx.font = '10px monospace';
+    ctx.fillText(k.slice(0, 3).toUpperCase(), x + 28, 472);
+    if (avg > 0) {
+      ctx.fillStyle = '#fff';
+      ctx.font = '9px monospace';
+      ctx.fillText(Math.round(avg) + '%', x + 28, 456 - barH);
+    }
+  }
+
+  // Footer
+  ctx.fillStyle = '#222';
+  ctx.fillRect(16, 558, 768, 26);
+  ctx.fillStyle = '#555';
+  ctx.font = '10px monospace';
+  ctx.fillText('moodOS v2.0 · generado el ' + new Date().toLocaleString('es') + ' · sebbi', 32, 575);
+
+  // Descargar
+  const link = document.createElement('a');
+  link.download = `moodOS_resumen_${new Date().toISOString().slice(0, 10)}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showNotif('✓ PNG exportado correctamente');
 }
 
 // ══════════ NOTIFICATION ══════════
