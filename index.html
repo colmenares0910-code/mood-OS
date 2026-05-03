@@ -490,6 +490,33 @@
   .notif.show { transform:translateX(0); }
 
   @keyframes rainbowMove{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+  /* ── CHANGELOG MODAL ── */
+#changelogModal {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92);
+  z-index:2000; align-items:center; justify-content:center;
+}
+#changelogModal.open { display:flex; }
+.changelog-box {
+  width:min(600px,90vw); border:1px solid var(--accent);
+  background:#000; padding:2rem; position:relative;
+  box-shadow:0 0 40px rgba(0,255,136,0.2);
+}
+.changelog-box h3 {
+  font-family:'Orbitron',monospace; font-size:14px; color:var(--accent);
+  letter-spacing:4px; margin-bottom:1.5rem; text-shadow:0 0 10px var(--accent);
+}
+.changelog-content {
+  max-height:400px; overflow-y:auto; font-size:12px;
+  line-height:1.9; color:#aaa; white-space:pre-wrap;
+  border:1px solid #111; padding:1rem; background:#050505;
+}
+.changelog-close {
+  position:absolute; top:1rem; right:1rem;
+  background:none; border:1px solid #333; color:var(--dim);
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  padding:4px 10px; cursor:pointer; transition:all 0.2s;
+}
+.changelog-close:hover { border-color:var(--accent); color:var(--accent); }
 </style>
 </head>
 <body>
@@ -506,15 +533,16 @@
                                                   v2.0.0</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
-  <div class="btn-row">
+<div class="btn-row">
     <a href="https://colmenares0910-code.github.io/mi-pagina./" target="_blank" class="btn-portfolio" id="portfolioBtn">◄ sebbi/web</a>
+    <button class="btn-enter" id="changelogBtn" onclick="openChangelog()">📋 ACTUALIZACIONES</button>
     <button class="btn-enter" id="enterBtn" onclick="enterOS()">START SYSTEM ▶</button>
   </div>
   <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:min(600px,90vw);text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;line-height:2;">
     <span style="background:linear-gradient(90deg,#ff0080,#ff8800,#ffcc00,#00ff88,#00cfff,#8888ff,#ff0080);background-size:200% 100%;animation:rainbowMove 3s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
       moodOS v2.0 es un proyecto en constante evolución. Actualmente me encuentro implementando mejoras y nuevas funcionalidades de forma regular. Gracias por acompañarme en esta etapa de crecimiento mientras preparamos el camino para el gran salto a la V3.0.
     </span>
-  </div>
+</div>
 </div>
 
 <!-- MOOD SELECTOR -->
@@ -844,6 +872,15 @@
     <div class="s-item" style="margin-left:auto">moodOS v2.0 · sebbi</div>
   </div>
 </div>
+  
+<!-- CHANGELOG MODAL -->
+<div id="changelogModal">
+  <div class="changelog-box">
+    <button class="changelog-close" onclick="closeChangelog()">✕ CERRAR</button>
+    <h3>📋 ACTUALIZACIONES — moodOS</h3>
+    <div class="changelog-content" id="changelogContent"></div>
+  </div>
+</div>
 
 <div class="notif" id="notif"></div>
 
@@ -885,7 +922,8 @@ function bootNext() {
     document.getElementById('progressBar').style.width = '100%';
     setTimeout(()=>{
       document.getElementById('enterBtn').style.display = 'inline-block';
-      document.getElementById('portfolioBtn').style.opacity = '1';
+document.getElementById('changelogBtn').style.display = 'inline-block';
+document.getElementById('portfolioBtn').style.opacity = '1';
     }, 400);
     return;
   }
@@ -950,6 +988,40 @@ const moodData = {
   bored:    {name:'ABURRIDO', emoji:'🥱',color:'#888888',level:35, energy:35,focus:30},
   focused:  {name:'ENFOCADO', emoji:'🎯',color:'#00ffff',level:80, energy:80,focus:95},
 };
+
+  // ══════════ CHANGELOG ══════════
+const changelogDefault = `v2.0.0 — Mayo 2025
+═══════════════════════════
+✦ Lanzamiento oficial de moodOS v2.0
+✦ Exportación de datos en JSON y TXT
+✦ Exportación de resumen visual en PNG
+✦ Widget de IA con frases personalizadas
+✦ Tracker de hábitos semanal
+✦ Pomodoro con notificaciones del navegador
+✦ Sonidos ambient con Web Audio API
+✦ Modo claro / oscuro
+✦ Heatmap emocional de 30 días
+✦ Diario con búsqueda integrada
+✦ Respiración guiada con 4 patrones
+✦ Meditación con sesiones de 5 a 20 min
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+v3.0 — Próximamente...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⟳ Análisis de patrones con IA
+⟳ Reporte mensual en PDF
+⟳ Temas de color personalizables
+⟳ Sincronización en la nube
+⟳ Modo check-in rápido`;
+
+function openChangelog() {
+  const saved = localStorage.getItem('moodChangelog') || changelogDefault;
+  document.getElementById('changelogContent').textContent = saved;
+  document.getElementById('changelogModal').classList.add('open');
+}
+function closeChangelog() {
+  document.getElementById('changelogModal').classList.remove('open');
+}
 
 function selectMood(el) {
   currentMood = el.dataset.mood;
