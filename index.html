@@ -980,6 +980,10 @@
       </div>
       <div class="chart-wrap" id="histChart"></div>
       <div class="history-list" id="historyList"></div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.75rem">
+  <button class="btn sm info" onclick="exportJSON()">↓ EXPORTAR JSON</button>
+  <button class="btn sm" onclick="exportTXT()">↓ EXPORTAR TXT</button>
+      
     </div>
  
     <!-- Calculadora -->
@@ -1769,6 +1773,50 @@ function saveName() {
   localStorage.setItem('moodUserName', val);
   document.getElementById('nameInputWrap').style.display = 'none';
   document.getElementById('moodGreeting').textContent = `// bienvenido, ${val}`;
+}
+
+  // ══════════ EXPORT ══════════
+function exportJSON() {
+  const data = {
+    usuario: localStorage.getItem('moodUserName') || 'anónimo',
+    exportado: new Date().toLocaleString('es'),
+    historialEmocional: JSON.parse(localStorage.getItem('moodHistory') || '[]'),
+    diario: JSON.parse(localStorage.getItem('moodDiary') || '[]'),
+    tareas: JSON.parse(localStorage.getItem('moodTasks') || '[]'),
+    habitos: JSON.parse(localStorage.getItem('moodHabits') || '[]'),
+    notas: localStorage.getItem('moodNotes') || ''
+  };
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `moodOS_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  showNotif('Datos exportados como JSON');
+}
+
+function exportTXT() {
+  const name = localStorage.getItem('moodUserName') || 'anónimo';
+  const history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+  const diary = JSON.parse(localStorage.getItem('moodDiary') || '[]');
+  let txt = `moodOS v2.0 — Reporte de ${name}\n`;
+  txt += `Exportado: ${new Date().toLocaleString('es')}\n`;
+  txt += `${'═'.repeat(40)}\n\n`;
+  txt += `HISTORIAL EMOCIONAL (${history.length} entradas)\n`;
+  history.slice(0,20).forEach(h => {
+    const d = moodData[h.mood];
+    txt += `  ${new Date(h.time).toLocaleString('es')} — ${d?.emoji} ${d?.name}\n`;
+  });
+  txt += `\n${'═'.repeat(40)}\n\n`;
+  txt += `DIARIO (${diary.length} entradas)\n`;
+  diary.forEach(e => {
+    txt += `\n[${new Date(e.time).toLocaleString('es')}]\n${e.text}\n`;
+  });
+  const blob = new Blob([txt], {type: 'text/plain'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `moodOS_reporte_${new Date().toISOString().slice(0,10)}.txt`;
+  a.click();
+  showNotif('Datos exportados como TXT');
 }
 </script>
 </body>
