@@ -673,8 +673,17 @@
  
 <!-- ══════════════ MOOD SELECTOR ══════════════ -->
 <div id="mood-select">
-  <h2>DIAGNÓSTICO EMOCIONAL</h2>
-  <p>// selecciona tu estado actual</p>
+<h2>DIAGNÓSTICO EMOCIONAL</h2>
+<p id="moodGreeting">// selecciona tu estado actual</p>
+
+<div id="nameInputWrap" style="display:none; flex-direction:column; align-items:center; gap:0.75rem;">
+  <input id="nameInput" placeholder="¿cómo te llamas?" style="
+    background:#000; border:1px solid var(--accent); color:var(--text);
+    font-family:'Share Tech Mono',monospace; font-size:14px; padding:10px 20px;
+    outline:none; text-align:center; letter-spacing:2px; width:250px;
+  " maxlength="20" onkeydown="if(event.key==='Enter')saveName()">
+  <button class="btn sm" onclick="saveName()">CONFIRMAR ▶</button>
+</div>
   <div class="mood-grid">
     <div class="mood-btn" data-mood="excellent" data-emoji="🌟" data-color="#00ff88" onclick="selectMood(this)">
       <span class="emoji">🌟</span><span class="label">Excelente</span>
@@ -1133,6 +1142,7 @@ setTimeout(bootNext, 400);
 function enterOS() {
   document.getElementById('boot').style.display = 'none';
   document.getElementById('mood-select').style.display = 'flex';
+  initName(); 
 }
  
 // ══════════ MOOD ══════════
@@ -1742,6 +1752,23 @@ function startMeditation(minutes,name){
 function showNotif(msg){
   const n=document.getElementById('notif');n.textContent='► '+msg;n.classList.add('show');
   setTimeout(()=>n.classList.remove('show'),3000);
+}
+  // ══════════ NAME ══════════
+function initName() {
+  const name = localStorage.getItem('moodUserName');
+  if (!name) {
+    document.getElementById('nameInputWrap').style.display = 'flex';
+    document.getElementById('moodGreeting').textContent = '// ¿quién eres?';
+  } else {
+    document.getElementById('moodGreeting').textContent = `// bienvenido de vuelta, ${name}`;
+  }
+}
+function saveName() {
+  const val = document.getElementById('nameInput').value.trim();
+  if (!val) return;
+  localStorage.setItem('moodUserName', val);
+  document.getElementById('nameInputWrap').style.display = 'none';
+  document.getElementById('moodGreeting').textContent = `// bienvenido, ${val}`;
 }
 </script>
 </body>
