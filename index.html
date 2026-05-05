@@ -5,7 +5,7 @@
 <link rel="icon" href="moodOS.png" type="image/png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>moodOS v3.0 — core evolution</title>
+<title>moodOS v2.0</title>
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -23,6 +23,7 @@
     --widget-border: #1a1a1a;
   }
 
+  /* ── LIGHT MODE ── */
   body.light-mode {
     --bg: #f0f0f0;
     --surface: #e8e8e8;
@@ -71,7 +72,7 @@
   }
   body.light-mode::before { display: none; }
 
-  /* BOOT */
+  /* ── BOOT ── */
   #boot {
     position: fixed; inset: 0;
     background: #000;
@@ -132,7 +133,7 @@
   #boot .btn-enter:hover::before { transform:translateX(0); }
   #boot .btn-row { display:flex; gap:1rem; flex-wrap:wrap; justify-content:center; }
 
-  /* MOOD SELECTOR */
+  /* ── MOOD SELECTOR ── */
   #mood-select {
     position: fixed; inset: 0; background: var(--bg);
     display: none; flex-direction: column;
@@ -172,6 +173,7 @@
   .mood-btn::before { background:var(--mc,var(--accent)); }
   .mood-btn .label { color:var(--mc,var(--dim)); }
 
+  /* Name input */
   #nameInputWrap {
     display: none; flex-direction: column; align-items: center; gap: 0.75rem;
   }
@@ -181,9 +183,10 @@
     outline: none; text-align: center; letter-spacing: 2px; width: 250px;
   }
 
-  /* OS */
+  /* ── MAIN OS ── */
   #os { display:none; min-height:100vh; }
 
+  /* Taskbar */
   #taskbar {
     position: fixed; top:0; left:0; right:0; height:48px;
     background: rgba(0,0,0,0.95); border-bottom:1px solid #1a1a1a;
@@ -210,6 +213,7 @@
   #taskbar .tb-btn:hover { color:var(--accent); border-color:#222; }
   #taskbar .tb-btn.active { color:var(--accent); border-color:var(--accent); }
 
+  /* Theme toggle */
   #themeToggle {
     font-size:16px; cursor:pointer; padding:2px 8px;
     border:1px solid #333; color:var(--dim); background:none;
@@ -217,11 +221,14 @@
   }
   #themeToggle:hover { border-color:var(--accent); color:var(--accent); }
 
+  /* Desktop */
   #desktop {
     padding-top:60px; padding-bottom:60px; min-height:100vh;
     display:grid; grid-template-columns:repeat(auto-fill,minmax(340px,1fr));
     gap:1rem; padding-left:1rem; padding-right:1rem;
   }
+
+  /* Widget */
   .widget {
     background: var(--widget-bg); border:1px solid var(--widget-border);
     padding:1.25rem; position:relative; overflow:hidden; display:none;
@@ -240,6 +247,9 @@
     font-family:'Orbitron',monospace; font-size:10px;
     letter-spacing:3px; color:var(--accent-w,var(--accent)); text-transform:uppercase;
   }
+  .widget-icon { font-size:14px; }
+
+  /* Buttons */
   .btn {
     background:transparent; border:1px solid #222; color:var(--text);
     font-family:'Share Tech Mono',monospace; font-size:12px; padding:8px 16px;
@@ -254,6 +264,8 @@
   .btn.danger{--accent:#ff3355;} .btn.info{--accent:#00cfff;}
   .btn.warn{--accent:#ffcc00;} .btn.purple{--accent:#cc88ff;}
   .btn.sm { font-size:10px; padding:5px 10px; letter-spacing:1px; }
+
+  /* Estado */
   .mood-display { text-align:center; padding:1rem 0; }
   .mood-big-emoji { font-size:4rem; display:block; margin-bottom:0.5rem; }
   .mood-name { font-family:'Orbitron',monospace; font-size:16px; letter-spacing:3px; }
@@ -263,6 +275,8 @@
   .stat-box { text-align:center; padding:8px; border:1px solid #111; }
   .stat-val { font-family:'Orbitron',monospace; font-size:18px; color:var(--accent); }
   .stat-lbl { font-size:9px; color:var(--dim); letter-spacing:1px; margin-top:3px; }
+
+  /* IA */
   .ai-quote {
     font-size:13px; line-height:1.8; color:var(--text); min-height:60px;
     padding:0.75rem; border:1px solid #111; background:#000; position:relative;
@@ -270,54 +284,202 @@
   .ai-quote::before { content:'"'; position:absolute; top:-5px; left:8px; color:var(--accent); font-size:24px; }
   .ai-cursor { display:inline-block; width:8px; height:14px; background:var(--accent); margin-left:3px; animation:blink 1s infinite; vertical-align:middle; }
   @keyframes blink{0%,49%{opacity:1;}50%,100%{opacity:0;}}
+  .ai-generate-btn { margin-top:0.75rem; width:100%; }
   .ai-tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:0.75rem; }
   .ai-tag { font-size:10px; padding:3px 8px; border:1px solid #222; color:var(--dim); letter-spacing:1px; cursor:pointer; transition:all 0.2s; }
   .ai-tag:hover,.ai-tag.active { border-color:var(--accent); color:var(--accent); }
+
+  /* Diario */
   .diary-search { width:100%; background:var(--bg); border:1px solid var(--widget-border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:12px; padding:8px; outline:none; margin-bottom:0.5rem; transition:border-color 0.3s; }
   .diary-search:focus { border-color:var(--accent); }
   .diary-entries { max-height:200px; overflow-y:auto; margin-bottom:0.75rem; }
   .diary-entry { padding:8px; border-bottom:1px solid #0d0d0d; }
   .diary-entry .time { font-size:10px; color:var(--dim); margin-bottom:3px; }
   .diary-entry .text { font-size:12px; color:var(--text); line-height:1.5; }
-  .diary-textarea { width:100%; background:var(--bg); border:1px solid var(--widget-border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:12px; padding:10px; resize:vertical; min-height:80px; outline:none; transition:border-color 0.3s; }
+  .diary-entry .entry-mood { font-size:10px; color:var(--accent); }
+  .diary-textarea {
+    width:100%; background:var(--bg); border:1px solid var(--widget-border); color:var(--text);
+    font-family:'Share Tech Mono',monospace; font-size:12px; padding:10px;
+    resize:vertical; min-height:80px; outline:none; transition:border-color 0.3s;
+  }
   .diary-textarea:focus { border-color:var(--accent); }
+  .diary-actions { display:flex; gap:0.5rem; margin-top:0.5rem; }
+
+  /* Respiración */
   .breath-container { display:flex; flex-direction:column; align-items:center; padding:1rem 0; gap:1rem; }
-  .breath-circle { width:100px; height:100px; border-radius:50%; border:2px solid var(--accent); display:flex; align-items:center; justify-content:center; font-size:11px; letter-spacing:1px; color:var(--accent); box-shadow:0 0 20px rgba(0,255,136,0.2); transition:transform 0.1s; }
+  .breath-circle {
+    width:100px; height:100px; border-radius:50%;
+    border:2px solid var(--accent); display:flex; align-items:center; justify-content:center;
+    font-size:11px; letter-spacing:1px; color:var(--accent);
+    box-shadow:0 0 20px rgba(0,255,136,0.2); transition:transform 0.1s; position:relative;
+  }
+  .breath-circle::before { content:''; position:absolute; inset:8px; border-radius:50%; background:rgba(0,255,136,0.05); }
+  .breath-circle.inhale { animation:inhale 4s ease-in-out forwards; }
+  .breath-circle.hold { box-shadow:0 0 40px rgba(0,255,136,0.4); }
+  .breath-circle.exhale { animation:exhale 4s ease-in-out forwards; }
+  @keyframes inhale{from{transform:scale(1);box-shadow:0 0 10px rgba(0,255,136,0.2);}to{transform:scale(1.5);box-shadow:0 0 40px rgba(0,255,136,0.5);}}
+  @keyframes exhale{from{transform:scale(1.5);box-shadow:0 0 40px rgba(0,255,136,0.5);}to{transform:scale(1);box-shadow:0 0 10px rgba(0,255,136,0.2);}}
   .breath-count { font-family:'Orbitron',monospace; font-size:28px; color:var(--accent); text-shadow:0 0 10px var(--accent); }
+  .breath-phase { font-size:12px; color:var(--dim); letter-spacing:3px; text-transform:uppercase; }
+  .breath-patterns { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; }
+  .breath-pattern-btn { font-size:10px; padding:4px 10px; background:transparent; border:1px solid #222; color:var(--dim); cursor:pointer; font-family:'Share Tech Mono',monospace; letter-spacing:1px; transition:all 0.2s; }
+  .breath-pattern-btn:hover,.breath-pattern-btn.active { border-color:var(--accent); color:var(--accent); }
+  .breath-cycle-info { font-size:10px; color:var(--dim); letter-spacing:1px; }
+
+  /* Sonidos */
   .sound-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.5rem; }
-  .sound-btn { padding:12px 8px; background:#0a0a0a; border:1px solid #1a1a1a; cursor:pointer; text-align:center; transition:all 0.3s; }
+  .sound-btn { padding:12px 8px; background:#0a0a0a; border:1px solid #1a1a1a; cursor:pointer; text-align:center; transition:all 0.3s; font-family:'Share Tech Mono',monospace; }
   .sound-btn:hover { border-color:var(--accent); }
-  .sound-btn.active { border-color:var(--accent); background:rgba(0,255,136,0.05); }
+  .sound-btn.active { border-color:var(--accent); background:rgba(0,255,136,0.05); box-shadow:0 0 10px rgba(0,255,136,0.2); }
+  .sound-btn .s-icon { font-size:1.5rem; display:block; margin-bottom:5px; }
+  .sound-btn .s-name { font-size:10px; color:var(--dim); letter-spacing:1px; }
+  .sound-btn.active .s-name { color:var(--accent); }
   .volume-wrap { margin-top:1rem; display:flex; align-items:center; gap:0.75rem; }
+  .volume-wrap label { font-size:11px; color:var(--dim); letter-spacing:1px; }
   .volume-wrap input[type=range] { flex:1; -webkit-appearance:none; height:3px; background:#222; outline:none; }
+  .volume-wrap input[type=range]::-webkit-slider-thumb { -webkit-appearance:none; width:12px; height:12px; background:var(--accent); cursor:pointer; border-radius:50%; box-shadow:0 0 5px var(--accent); }
+
+  /* Historial */
+  .chart-wrap { display:flex; align-items:flex-end; gap:4px; height:80px; margin-top:0.75rem; }
+  .chart-bar-wrap { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .chart-bar { width:100%; border-radius:1px; min-height:4px; transition:height 0.5s ease; }
+  .chart-label { font-size:9px; color:var(--dim); }
+  .history-list { margin-top:1rem; max-height:150px; overflow-y:auto; }
+  .history-item { display:flex; align-items:center; gap:0.75rem; padding:6px 0; border-bottom:1px solid #0d0d0d; font-size:11px; }
+  .history-item .h-time { color:var(--dim); min-width:80px; }
+  .history-item .h-emoji { font-size:14px; }
+  .history-item .h-name { color:var(--text); }
+
+  /* Tareas */
+  .task-input-row { display:flex; gap:0.5rem; margin-bottom:0.75rem; }
+  .task-input { flex:1; background:var(--bg); border:1px solid var(--widget-border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:12px; padding:8px; outline:none; transition:border-color 0.3s; }
+  .task-input:focus { border-color:var(--accent); }
+  .task-list { max-height:200px; overflow-y:auto; }
+  .task-item { display:flex; align-items:center; gap:0.75rem; padding:7px 0; border-bottom:1px solid #0d0d0d; }
+  .task-check { width:14px; height:14px; border:1px solid #333; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+  .task-check:hover { border-color:var(--accent); }
+  .task-check.done { border-color:var(--accent); background:rgba(0,255,136,0.15); }
+  .task-check.done::after { content:'✓'; font-size:10px; color:var(--accent); }
+  .task-text { font-size:12px; flex:1; transition:all 0.2s; }
+  .task-text.done { color:var(--dim); text-decoration:line-through; }
+  .task-del { font-size:10px; color:#333; cursor:pointer; transition:color 0.2s; }
+  .task-del:hover { color:var(--danger); }
+  .task-priority { font-size:9px; padding:2px 6px; border:1px solid; }
+  .task-priority.high { border-color:var(--danger); color:var(--danger); }
+  .task-priority.med { border-color:var(--warn); color:var(--warn); }
+  .task-priority.low { border-color:var(--dim); color:var(--dim); }
+  .priority-select { background:var(--bg); border:1px solid var(--widget-border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:11px; padding:7px; outline:none; }
+
+  /* Clima emocional */
+  .heatmap { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-top:0.75rem; }
+  .heatmap-cell { aspect-ratio:1; border-radius:2px; cursor:pointer; transition:transform 0.2s; }
+  .heatmap-cell:hover { transform:scale(1.3); }
+  .heatmap-days { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-top:4px; }
+  .heatmap-day { font-size:9px; color:var(--dim); text-align:center; }
+
+  /* Pomodoro */
+  .pomo-display { text-align:center; padding:1rem 0; }
   .pomo-time { font-family:'Orbitron',monospace; font-size:48px; color:var(--accent); text-shadow:0 0 20px var(--accent); line-height:1; }
+  .pomo-phase { font-size:11px; color:var(--dim); letter-spacing:3px; margin-top:8px; }
+  .pomo-controls { display:flex; gap:0.5rem; justify-content:center; margin-top:1rem; }
+  .pomo-modes { display:flex; gap:0.5rem; justify-content:center; margin-bottom:1rem; }
+  .pomo-count { font-size:11px; color:var(--dim); margin-top:0.5rem; letter-spacing:2px; }
   .pomo-dots { display:flex; gap:6px; justify-content:center; margin-top:0.5rem; }
   .pomo-dot { width:8px; height:8px; border-radius:50%; border:1px solid var(--dim); transition:all 0.3s; }
   .pomo-dot.filled { background:var(--accent); border-color:var(--accent); box-shadow:0 0 5px var(--accent); }
-  .task-list { max-height:200px; overflow-y:auto; }
-  .task-item { display:flex; align-items:center; gap:0.75rem; padding:7px 0; border-bottom:1px solid #0d0d0d; }
-  .task-check { width:14px; height:14px; border:1px solid #333; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
-  .task-check.done { border-color:var(--accent); background:rgba(0,255,136,0.15); }
-  .task-check.done::after { content:'✓'; font-size:10px; color:var(--accent); }
-  .task-text.done { color:var(--dim); text-decoration:line-through; }
+  .pomo-notif-row { font-size:10px; color:var(--dim); margin-top:0.5rem; display:flex; align-items:center; justify-content:center; gap:0.5rem; }
+  #notifToggle { cursor:pointer; font-size:16px; }
+
+  /* Citas */
+  .quote-display { padding:1rem; border:1px solid #111; background:#000; min-height:80px; }
+  .quote-text { font-size:13px; line-height:1.7; color:var(--text); font-style:italic; }
+  .quote-author { font-size:11px; color:var(--accent); margin-top:0.5rem; letter-spacing:1px; }
+  .quote-category { display:flex; gap:0.5rem; flex-wrap:wrap; margin-top:0.75rem; }
+  .quote-cat-btn { font-size:10px; padding:3px 8px; border:1px solid #222; color:var(--dim); cursor:pointer; transition:all 0.2s; background:none; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+  .quote-cat-btn.active,.quote-cat-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  /* Calculadora */
+  .calc-display { background:#000; border:1px solid #1a1a1a; padding:12px; text-align:right; margin-bottom:0.75rem; }
+  .calc-expr { font-size:11px; color:var(--dim); min-height:16px; }
+  .calc-val { font-family:'Orbitron',monospace; font-size:28px; color:var(--accent); text-shadow:0 0 10px var(--accent); }
+  .calc-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:4px; }
+  .calc-key { background:#0a0a0a; border:1px solid #1a1a1a; color:var(--text); font-family:'Share Tech Mono',monospace; font-size:14px; padding:12px; cursor:pointer; transition:all 0.2s; }
+  .calc-key:hover { border-color:var(--accent); color:var(--accent); box-shadow:0 0 8px rgba(0,255,136,0.2); }
+  .calc-key.op { color:var(--info); }
+  .calc-key.eq { color:#000; background:var(--accent); border-color:var(--accent); }
+  .calc-key.eq:hover { box-shadow:0 0 20px var(--accent); }
+  .calc-key.clr { color:var(--danger); }
+  .calc-key.span2 { grid-column:span 2; }
+
+  /* Notas */
+  .notes-area { width:100%; min-height:150px; background:var(--bg); border:1px solid var(--widget-border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:12px; padding:10px; outline:none; resize:vertical; transition:border-color 0.3s; line-height:1.6; }
+  .notes-area:focus { border-color:var(--accent); }
+  .notes-actions { display:flex; gap:0.5rem; margin-top:0.5rem; align-items:center; }
+  .notes-count { font-size:10px; color:var(--dim); margin-left:auto; }
+
+  /* Hábitos */
   .habit-list { display:flex; flex-direction:column; gap:0.5rem; }
+  .habit-item { display:flex; align-items:center; gap:0.75rem; padding:8px; border:1px solid #111; }
+  .habit-name { flex:1; font-size:12px; }
+  .habit-streak { font-size:11px; color:var(--accent); letter-spacing:1px; }
   .habit-days { display:flex; gap:4px; }
   .habit-day { width:14px; height:14px; border:1px solid #222; border-radius:2px; cursor:pointer; transition:all 0.2s; }
   .habit-day.done { background:var(--accent); border-color:var(--accent); }
-  .heatmap { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-top:0.75rem; }
-  .heatmap-cell { aspect-ratio:1; border-radius:2px; cursor:pointer; transition:transform 0.2s; background:#111; }
+  .habit-day:hover { border-color:var(--accent); }
+  .habit-add-row { display:flex; gap:0.5rem; margin-top:0.75rem; }
+  .habit-add-input { flex:1; background:var(--bg); border:1px solid var(--widget-border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:12px; padding:7px; outline:none; transition:border-color 0.3s; }
+  .habit-add-input:focus { border-color:var(--accent); }
+
+  /* Sistema */
+  .sys-bar-row { display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem; }
+  .sys-label { font-size:11px; color:var(--dim); width:60px; letter-spacing:1px; }
+  .sys-bar { flex:1; height:6px; background:#111; border-radius:3px; overflow:hidden; }
+  .sys-fill { height:100%; border-radius:3px; transition:width 1s ease; }
+  .sys-val { font-size:11px; color:var(--text); width:35px; text-align:right; }
+  .sys-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:0.5rem; }
+  .sys-stat { padding:8px; border:1px solid #111; }
+  .sys-stat .val { font-family:'Orbitron',monospace; font-size:16px; color:var(--accent); }
+  .sys-stat .lbl { font-size:9px; color:var(--dim); letter-spacing:1px; margin-top:3px; }
+
+  /* Meditación */
+  .meditate-display { text-align:center; padding:1.5rem 0; }
+  .meditate-orb { width:80px; height:80px; border-radius:50%; background:radial-gradient(circle,rgba(0,255,136,0.2) 0%,transparent 70%); border:1px solid rgba(0,255,136,0.3); margin:0 auto 1rem; display:flex; align-items:center; justify-content:center; font-size:2rem; }
+  .meditate-text { font-size:12px; color:var(--dim); letter-spacing:2px; line-height:1.8; }
+  .meditate-sessions { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; margin-top:1rem; }
+  .meditate-session { padding:10px; border:1px solid #111; cursor:pointer; text-align:center; transition:all 0.3s; }
+  .meditate-session:hover { border-color:var(--accent); }
+  .meditate-session .ms-time { font-family:'Orbitron',monospace; font-size:16px; color:var(--accent); }
+  .meditate-session .ms-name { font-size:10px; color:var(--dim); letter-spacing:1px; margin-top:3px; }
+
+  /* Intenciones */
+  .intention-wrap { padding:0.5rem 0; }
+  .intention-label { font-size:11px; color:var(--dim); letter-spacing:2px; margin-bottom:0.5rem; }
+  .intention-input { width:100%; background:var(--bg); border:1px solid var(--widget-border); color:var(--text); font-family:'Share Tech Mono',monospace; font-size:13px; padding:10px; outline:none; transition:border-color 0.3s; }
+  .intention-input:focus { border-color:var(--accent); }
   .intentions-list { margin-top:0.75rem; display:flex; flex-direction:column; gap:0.5rem; }
   .intention-item { display:flex; gap:0.75rem; align-items:center; padding:6px; border:1px solid #0d0d0d; font-size:12px; }
-  .intention-tick { width:16px; height:16px; border:1px solid #333; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .intention-item.done { opacity:0.5; }
+  .intention-tick { width:16px; height:16px; border:1px solid #333; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:all 0.2s; flex-shrink:0; }
+  .intention-tick:hover,.intention-tick.done { border-color:var(--accent); }
   .intention-tick.done::after { content:'✓'; font-size:10px; color:var(--accent); }
+
+  /* Statusbar */
   #statusbar {
     position:fixed; bottom:0; left:0; right:0; height:30px;
     background:#000; border-top:1px solid #1a1a1a;
     display:flex; align-items:center; padding:0 1rem;
     gap:1.5rem; font-size:10px; color:var(--dim); letter-spacing:1px; z-index:100;
   }
-  .s-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 4px var(--accent); animation:pulse 2s infinite; }
+  #statusbar .s-item { display:flex; align-items:center; gap:6px; }
+  #statusbar .s-dot { width:5px; height:5px; border-radius:50%; background:var(--accent); box-shadow:0 0 4px var(--accent); animation:pulse 2s infinite; }
   @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+  #statusbar .s-sep { width:1px; height:12px; background:#1a1a1a; }
+
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:#000; }
+  ::-webkit-scrollbar-thumb { background:#222; border-radius:2px; }
+  ::-webkit-scrollbar-thumb:hover { background:var(--accent); }
+
   .notif {
     position:fixed; bottom:50px; right:1rem;
     background:#0a0a0a; border:1px solid var(--accent);
@@ -326,50 +488,1232 @@
     transform:translateX(120%); transition:transform 0.4s ease; z-index:9998;
   }
   .notif.show { transform:translateX(0); }
-  #changelogModal {
-    display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92);
-    z-index:2000; align-items:center; justify-content:center;
-  }
-  #changelogModal.open { display:flex; }
-  .changelog-box { width:min(600px,90vw); border:1px solid var(--accent); background:#000; padding:2rem; }
-  .changelog-content { max-height:400px; overflow-y:auto; font-size:12px; line-height:1.9; color:#aaa; white-space:pre-wrap; padding:1rem; background:#050505; }
-  .changelog-close { position:absolute; top:1rem; right:1rem; background:none; border:1px solid #333; color:var(--dim); cursor:pointer; }
+
+  @keyframes rainbowMove{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+  /* ── CHANGELOG MODAL ── */
+#changelogModal {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92);
+  z-index:2000; align-items:center; justify-content:center;
+}
+#changelogModal.open { display:flex; }
+.changelog-box {
+  width:min(600px,90vw); border:1px solid var(--accent);
+  background:#000; padding:2rem; position:relative;
+  box-shadow:0 0 40px rgba(0,255,136,0.2);
+}
+.changelog-box h3 {
+  font-family:'Orbitron',monospace; font-size:14px; color:var(--accent);
+  letter-spacing:4px; margin-bottom:1.5rem; text-shadow:0 0 10px var(--accent);
+}
+.changelog-content {
+  max-height:400px; overflow-y:auto; font-size:12px;
+  line-height:1.9; color:#aaa; white-space:pre-wrap;
+  border:1px solid #111; padding:1rem; background:#050505;
+}
+.changelog-close {
+  position:absolute; top:1rem; right:1rem;
+  background:none; border:1px solid #333; color:var(--dim);
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  padding:4px 10px; cursor:pointer; transition:all 0.2s;
+}
+.changelog-close:hover { border-color:var(--accent); color:var(--accent); }
 </style>
 </head>
 <body>
+
+<!-- BOOT -->
 <div id="boot">
-  <div class="logo-ascii">███╗   ███╗ ██████╗  ██████╗ ██████╗      ██████╗ ███████╗<br>████╗ ████║██╔═══██╗██╔═══██╗██╔══██╗    ██╔═══██╗██╔════╝<br>██╔████╔██║██║   ██║██║   ██║██║  ██║    ██║   ██║███████╗<br>██║╚██╔╝██║██║   ██║██║   ██║██║  ██║    ██║   ██║╚════██║<br>██║ ╚═╝ ██║╚██████╔╝╚██████╔╝██████╔╝    ╚██████╔╝███████║<br>╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚═════╝      ╚═════╝ ╚══════╝<br>                                                  v3.0.0</div>
+  <div class="logo-ascii">
+███╗   ███╗ ██████╗  ██████╗ ██████╗      ██████╗ ███████╗
+████╗ ████║██╔═══██╗██╔═══██╗██╔══██╗    ██╔═══██╗██╔════╝
+██╔████╔██║██║   ██║██║   ██║██║  ██║    ██║   ██║███████╗
+██║╚██╔╝██║██║   ██║██║   ██║██║  ██║    ██║   ██║╚════██║
+██║ ╚═╝ ██║╚██████╔╝╚██████╔╝██████╔╝    ╚██████╔╝███████║
+╚═╝     ╚═╝ ╚═════╝  ╚═════╝ ╚═════╝      ╚═════╝ ╚══════╝
+                                                  v2.0.0</div>
   <div class="boot-log" id="bootLog"></div>
   <div class="progress-wrap"><div class="progress-bar" id="progressBar"></div></div>
-  <div class="btn-row">
+<div class="btn-row">
     <a href="https://colmenares0910-code.github.io/mi-pagina./" target="_blank" class="btn-portfolio" id="portfolioBtn">◄ sebbi/web</a>
     <button class="btn-enter" id="changelogBtn" onclick="openChangelog()">📋 UPDATES</button>
     <button class="btn-enter" id="enterBtn" onclick="enterOS()">START SYSTEM ▶</button>
   </div>
-  <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:min(600px,90vw);text-align:center;font-size:10px;letter-spacing:1px;">
-    <span style="background:linear-gradient(90deg,#ff0080,#ff8800,#ffcc00,#00ff88,#00cfff,#8888ff,#ff0080);background-size:200% 100%;animation:rainbowMove 3s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;">moodOS v3.0 · inteligencia evolutiva · reportes mensuales · IA conversacional</span>
-  </div>
+  <div style="position:absolute;bottom:20px;left:50%;transform:translateX(-50%);width:min(600px,90vw);text-align:center;font-family:'Share Tech Mono',monospace;font-size:10px;letter-spacing:1px;line-height:2;">
+    <span style="background:linear-gradient(90deg,#ff0080,#ff8800,#ffcc00,#00ff88,#00cfff,#8888ff,#ff0080);background-size:200% 100%;animation:rainbowMove 3s linear infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">
+      moodOS v2.0 es un proyecto en constante evolución. Actualmente me encuentro implementando mejoras y nuevas funcionalidades de forma regular. Gracias por acompañarme en esta etapa de crecimiento mientras preparamos el camino para el gran salto a la V3.0.
+    </span>
 </div>
+</div>
+
+<!-- MOOD SELECTOR -->
 <div id="mood-select">
   <h2>DIAGNÓSTICO EMOCIONAL</h2>
   <p id="moodGreeting">// selecciona tu estado actual</p>
-  <div id="nameInputWrap"><input id="nameInput" placeholder="¿cómo te llamas?" maxlength="20" onkeydown="if(event.key==='Enter')saveName()"><button class="btn sm" onclick="saveName()">CONFIRMAR ▶</button></div>
-  <div class="mood-grid" id="moodGrid">
-    <div class="mood-btn" data-mood="excellent"><span class="emoji">🌟</span><span class="label">Excelente</span></div>
-    <div class="mood-btn" data-mood="good"><span class="emoji">😊</span><span class="label">Bien</span></div>
-    <div class="mood-btn" data-mood="okay"><span class="emoji">😐</span><span class="label">Normal</span></div>
-    <div class="mood-btn" data-mood="tired"><span class="emoji">😴</span><span class="label">Cansado</span></div>
-    <div class="mood-btn" data-mood="anxious"><span class="emoji">😰</span><span class="label">Ansioso</span></div>
-    <div class="mood-btn" data-mood="sad"><span class="emoji">😢</span><span class="label">Triste</span></div>
-    <div class="mood-btn" data-mood="angry"><span class="emoji">😤</span><span class="label">Enojado</span></div>
-    <div class="mood-btn" data-mood="bored"><span class="emoji">🥱</span><span class="label">Aburrido</span></div>
-    <div class="mood-btn" data-mood="focused"><span class="emoji">🎯</span><span class="label">Enfocado</span></div>
+  <div id="nameInputWrap">
+    <input id="nameInput" placeholder="¿cómo te llamas?" maxlength="20" onkeydown="if(event.key==='Enter')saveName()">
+    <button class="btn sm" onclick="saveName()">CONFIRMAR ▶</button>
+  </div>
+  <div class="mood-grid">
+    <div class="mood-btn" data-mood="excellent" onclick="selectMood(this)"><span class="emoji">🌟</span><span class="label">Excelente</span></div>
+    <div class="mood-btn" data-mood="good" onclick="selectMood(this)"><span class="emoji">😊</span><span class="label">Bien</span></div>
+    <div class="mood-btn" data-mood="okay" onclick="selectMood(this)"><span class="emoji">😐</span><span class="label">Normal</span></div>
+    <div class="mood-btn" data-mood="tired" onclick="selectMood(this)"><span class="emoji">😴</span><span class="label">Cansado</span></div>
+    <div class="mood-btn" data-mood="anxious" onclick="selectMood(this)"><span class="emoji">😰</span><span class="label">Ansioso</span></div>
+    <div class="mood-btn" data-mood="sad" onclick="selectMood(this)"><span class="emoji">😢</span><span class="label">Triste</span></div>
+    <div class="mood-btn" data-mood="angry" onclick="selectMood(this)"><span class="emoji">😤</span><span class="label">Enojado</span></div>
+    <div class="mood-btn" data-mood="bored" onclick="selectMood(this)"><span class="emoji">🥱</span><span class="label">Aburrido</span></div>
+    <div class="mood-btn" data-mood="focused" onclick="selectMood(this)"><span class="emoji">🎯</span><span class="label">Enfocado</span></div>
   </div>
 </div>
+
+<!-- MAIN OS -->
 <div id="os">
-  <div id="taskbar"><div class="logo" onclick="changeMood()">moodOS</div><div class="divider"></div><button class="tb-btn active" onclick="toggleAll()">ALL</button><button class="tb-btn" onclick="filterCategory('bienestar')">BIENESTAR</button><button class="tb-btn" onclick="filterCategory('productividad')">PRODUCTIVIDAD</button><button class="tb-btn" onclick="filterCategory('utilidades')">UTILIDADES</button><div class="divider"></div><button id="themeToggle" onclick="toggleTheme()">🌙</button><div class="mood-badge" id="taskbarMood" onclick="changeMood()">😊 BIEN</div><div class="clock" id="clock">00:00:00</div></div>
+  <div id="taskbar">
+    <div class="logo" onclick="changeMood()">moodOS</div>
+    <div class="divider"></div>
+    <button class="tb-btn active" onclick="toggleAll()">ALL</button>
+    <button class="tb-btn" onclick="filterCategory('bienestar')">BIENESTAR</button>
+    <button class="tb-btn" onclick="filterCategory('productividad')">PRODUCTIVIDAD</button>
+    <button class="tb-btn" onclick="filterCategory('utilidades')">UTILIDADES</button>
+    <div class="divider"></div>
+    <button id="themeToggle" onclick="toggleTheme()" title="Modo claro/oscuro">🌙</button>
+    <div class="mood-badge" id="taskbarMood" onclick="changeMood()">😊 BIEN</div>
+    <div class="clock" id="clock">00:00:00</div>
+  </div>
+
   <div id="desktop">
-    <div class="widget visible" data-cat="bienestar" style="--accent-w:#00ff88"><div class="widget-header"><span class="widget-title">Estado Emocional</span><span class="widget-icon">💠</span></div><div class="mood-display"><span class="mood-big-emoji" id="moodEmoji">😊</span><div class="mood-name" id="moodName">CARGANDO...</div><div class="mood-bar-wrap"><div class="mood-bar-fill" id="moodBar"></div></div></div><div class="mood-stats"><div class="stat-box"><div class="stat-val" id="statStreak">0</div><div class="stat-lbl">RACHA</div></div><div class="stat-box"><div class="stat-val" id="statEntries">0</div><div class="stat-lbl">ENTRADAS</div></div><div class="stat-box"><div class="stat-val" id="statBest">—</div><div class="stat-lbl">TOP MOOD</div></div></div></div>
-    <div class="widget visible" data-cat="bienestar" style="--accent-w:#00cfff"><div class="widget-header"><span class="widget-title">IA · Mensaje del Momento</span><span class="widget-icon">🤖</span></div><div class="ai-quote" id="aiQuote"><span id="aiText">Inicializando...</span><span class="ai-cursor" id="aiCursor"></span></div><div class="ai-tags" id="aiTags"><span class="ai-tag active" data-tone="motivacional">MOTIVACIÓN</span><span class="ai-tag" data-tone="filosofico">FILOSOFÍA</span><span class="ai-tag" data-tone="humor">HUMOR</span><span class="ai-tag" data-tone="reflexivo">REFLEXIÓN</span><span class="ai-tag" data-tone="zen">ZEN</span></div><button class="btn info ai-generate-btn" onclick="generateAIQuote()">↻ GENERAR CON IA</button></div>
-    <div class="widget visible" data-cat="bienestar" style="--accent-w:#00ff88"><div class="widget-header"><span class="widget-title">Respiración Guiada</span><span class="widget-icon">🌬️</span></div><div class="breath-container"><div class="breath-patterns"><button class="breath-pattern-btn active" onclick="setBreathPattern(this,'4-4-4')">4-4-4</button><button class="breath-pattern-btn" onclick="setBreathPattern(this,'4-7-8')">4-7-8</button></div><div class="breath-circle" id="breathCircle"><span id="breathLabel">INHALA</span></div><div class="breath-count" id="breathCount">—</div><div style="display:flex;gap:0.5rem"><button class="btn sm" onclick="startBreath()">INICIAR</button><button class="btn sm danger" onclick="stopBreath()">DETENER</button></div></div></div>
-    <div class="widget visible" data-cat="bienestar" style="--accent-w:#ffcc00"><div class="widget-header"><span class="widget-title">Intenciones del Día</span><span class="widget-icon">✨</span></div><div
+
+    <!-- Estado Emocional -->
+    <div class="widget visible" data-cat="bienestar" style="--accent-w:#00ff88">
+      <div class="widget-header"><span class="widget-title">Estado Emocional</span><span class="widget-icon">💠</span></div>
+      <div class="mood-display">
+        <span class="mood-big-emoji" id="moodEmoji">😊</span>
+        <div class="mood-name" id="moodName" style="color:var(--accent)">CARGANDO...</div>
+        <div class="mood-bar-wrap"><div class="mood-bar-fill" id="moodBar" style="width:70%;background:var(--accent);color:var(--accent)"></div></div>
+      </div>
+      <div class="mood-stats">
+        <div class="stat-box"><div class="stat-val" id="statStreak">0</div><div class="stat-lbl">DÍAS SEGUIDOS</div></div>
+        <div class="stat-box"><div class="stat-val" id="statEntries">0</div><div class="stat-lbl">ENTRADAS</div></div>
+        <div class="stat-box"><div class="stat-val" id="statBest">—</div><div class="stat-lbl">TOP MOOD</div></div>
+      </div>
+    </div>
+
+    <!-- IA -->
+    <div class="widget visible" data-cat="bienestar" style="--accent-w:#00cfff">
+      <div class="widget-header"><span class="widget-title">IA · Mensaje del Momento</span><span class="widget-icon">🤖</span></div>
+      <div class="ai-quote" id="aiQuote">
+        <span id="aiText">Inicializando módulo de inteligencia emocional...</span><span class="ai-cursor" id="aiCursor"></span>
+      </div>
+      <div class="ai-tags" id="aiTags">
+        <span class="ai-tag active" data-tone="motivacional">MOTIVACIÓN</span>
+        <span class="ai-tag" data-tone="filosofico">FILOSOFÍA</span>
+        <span class="ai-tag" data-tone="humor">HUMOR</span>
+        <span class="ai-tag" data-tone="reflexivo">REFLEXIÓN</span>
+        <span class="ai-tag" data-tone="zen">ZEN</span>
+      </div>
+      <button class="btn info ai-generate-btn" onclick="generateAIQuote()">↻ GENERAR CON IA</button>
+    </div>
+
+    <!-- Respiración -->
+    <div class="widget visible" data-cat="bienestar" style="--accent-w:#00ff88">
+      <div class="widget-header"><span class="widget-title">Respiración Guiada</span><span class="widget-icon">🌬️</span></div>
+      <div class="breath-container">
+        <div class="breath-patterns">
+          <button class="breath-pattern-btn active" onclick="setBreathPattern(this,'4-4-4')">4-4-4</button>
+          <button class="breath-pattern-btn" onclick="setBreathPattern(this,'4-7-8')">4-7-8</button>
+          <button class="breath-pattern-btn" onclick="setBreathPattern(this,'box')">CAJA</button>
+          <button class="breath-pattern-btn" onclick="setBreathPattern(this,'2-2')">RÁPIDA</button>
+        </div>
+        <div class="breath-circle" id="breathCircle"><span id="breathLabel">INHALA</span></div>
+        <div class="breath-count" id="breathCount">—</div>
+        <div class="breath-phase" id="breathPhase">listo para empezar</div>
+        <div class="breath-cycle-info" id="breathCycleInfo"></div>
+        <div style="display:flex;gap:0.5rem">
+          <button class="btn sm" onclick="startBreath()">INICIAR</button>
+          <button class="btn sm danger" onclick="stopBreath()">DETENER</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Meditación -->
+    <div class="widget visible" data-cat="bienestar" style="--accent-w:#cc88ff">
+      <div class="widget-header"><span class="widget-title">Meditación</span><span class="widget-icon">🧘</span></div>
+      <div class="meditate-display">
+        <div class="meditate-orb" id="meditateOrb">🧘</div>
+        <div class="meditate-text" id="meditateText">Elige una sesión para comenzar tu práctica de mindfulness</div>
+      </div>
+      <div class="meditate-sessions">
+        <div class="meditate-session" onclick="startMeditation(5,'Calma rápida')"><div class="ms-time">5 MIN</div><div class="ms-name">CALMA RÁPIDA</div></div>
+        <div class="meditate-session" onclick="startMeditation(10,'Claridad mental')"><div class="ms-time">10 MIN</div><div class="ms-name">CLARIDAD</div></div>
+        <div class="meditate-session" onclick="startMeditation(15,'Relajación profunda')"><div class="ms-time">15 MIN</div><div class="ms-name">PROFUNDA</div></div>
+        <div class="meditate-session" onclick="startMeditation(20,'Cuerpo & mente')"><div class="ms-time">20 MIN</div><div class="ms-name">CUERPO & MENTE</div></div>
+      </div>
+    </div>
+
+    <!-- Intenciones -->
+    <div class="widget visible" data-cat="bienestar" style="--accent-w:#ffcc00">
+      <div class="widget-header"><span class="widget-title">Intenciones del Día</span><span class="widget-icon">✨</span></div>
+      <div class="intention-wrap">
+        <div class="intention-label">// ¿qué quieres lograr hoy?</div>
+        <div style="display:flex;gap:0.5rem">
+          <input class="intention-input" id="intentionInput" placeholder="escribe una intención..." maxlength="80" onkeydown="if(event.key==='Enter')addIntention()">
+          <button class="btn sm warn" onclick="addIntention()">+</button>
+        </div>
+        <div class="intentions-list" id="intentionsList"></div>
+      </div>
+    </div>
+
+    <!-- Citas -->
+    <div class="widget visible" data-cat="bienestar" style="--accent-w:#ff8800">
+      <div class="widget-header"><span class="widget-title">Citas Inspiradoras</span><span class="widget-icon">📖</span></div>
+      <div class="quote-display">
+        <div class="quote-text" id="quoteText">El momento presente siempre será.</div>
+        <div class="quote-author" id="quoteAuthor">— Eckhart Tolle</div>
+      </div>
+      <div class="quote-category">
+        <button class="quote-cat-btn active" onclick="setQuoteCat(this,'all')">TODAS</button>
+        <button class="quote-cat-btn" onclick="setQuoteCat(this,'estoica')">ESTOICA</button>
+        <button class="quote-cat-btn" onclick="setQuoteCat(this,'zen')">ZEN</button>
+        <button class="quote-cat-btn" onclick="setQuoteCat(this,'ciencia')">CIENCIA</button>
+        <button class="quote-cat-btn" onclick="setQuoteCat(this,'motivacion')">MOTIVACIÓN</button>
+      </div>
+      <button class="btn sm" style="margin-top:0.75rem;width:100%" onclick="nextQuote()">↻ SIGUIENTE</button>
+    </div>
+
+    <!-- Sonidos -->
+    <div class="widget visible" data-cat="bienestar" style="--accent-w:#00ff88">
+      <div class="widget-header"><span class="widget-title">Sonidos Ambient</span><span class="widget-icon">🎵</span></div>
+      <div class="sound-grid">
+        <div class="sound-btn" data-sound="rain" onclick="toggleSound(this)"><span class="s-icon">🌧️</span><span class="s-name">LLUVIA</span></div>
+        <div class="sound-btn" data-sound="forest" onclick="toggleSound(this)"><span class="s-icon">🌲</span><span class="s-name">BOSQUE</span></div>
+        <div class="sound-btn" data-sound="ocean" onclick="toggleSound(this)"><span class="s-icon">🌊</span><span class="s-name">OCÉANO</span></div>
+        <div class="sound-btn" data-sound="fire" onclick="toggleSound(this)"><span class="s-icon">🔥</span><span class="s-name">FUEGO</span></div>
+        <div class="sound-btn" data-sound="space" onclick="toggleSound(this)"><span class="s-icon">🚀</span><span class="s-name">ESPACIO</span></div>
+        <div class="sound-btn" data-sound="cafe" onclick="toggleSound(this)"><span class="s-icon">☕</span><span class="s-name">CAFÉ</span></div>
+        <div class="sound-btn" data-sound="thunder" onclick="toggleSound(this)"><span class="s-icon">⛈️</span><span class="s-name">TORMENTA</span></div>
+        <div class="sound-btn" data-sound="wind" onclick="toggleSound(this)"><span class="s-icon">💨</span><span class="s-name">VIENTO</span></div>
+        <div class="sound-btn" data-sound="white" onclick="toggleSound(this)"><span class="s-icon">📻</span><span class="s-name">RUIDO BLANCO</span></div>
+      </div>
+      <div class="volume-wrap">
+        <label>VOL</label>
+        <input type="range" min="0" max="100" value="50" id="volumeSlider" oninput="setVolume(this.value)">
+        <span style="font-size:11px;color:var(--dim)" id="volDisplay">50%</span>
+      </div>
+    </div>
+
+    <!-- Pomodoro -->
+    <div class="widget visible" data-cat="productividad" style="--accent-w:#ff3355">
+      <div class="widget-header"><span class="widget-title">Pomodoro Timer</span><span class="widget-icon">🍅</span></div>
+      <div class="pomo-display">
+        <div class="pomo-modes">
+          <button class="btn sm active" id="pomoModeWork" onclick="setPomoMode('work')">TRABAJO</button>
+          <button class="btn sm" id="pomoModeShort" onclick="setPomoMode('short')">PAUSA CORTA</button>
+          <button class="btn sm" id="pomoModeLong" onclick="setPomoMode('long')">PAUSA LARGA</button>
+        </div>
+        <div class="pomo-time" id="pomoTime">25:00</div>
+        <div class="pomo-phase" id="pomoPhase">// listo para enfocar</div>
+        <div class="pomo-dots" id="pomoDots">
+          <div class="pomo-dot"></div><div class="pomo-dot"></div>
+          <div class="pomo-dot"></div><div class="pomo-dot"></div>
+        </div>
+        <div class="pomo-count" id="pomoCount">SESIÓN 0 / 4</div>
+        <div class="pomo-controls">
+          <button class="btn sm danger" onclick="startPomo()">▶ INICIAR</button>
+          <button class="btn sm" onclick="pausePomo()">⏸ PAUSA</button>
+          <button class="btn sm" onclick="resetPomo()">↺ RESET</button>
+        </div>
+        <div class="pomo-notif-row">
+          <span id="notifToggle" onclick="togglePomoNotif()" title="Activar/desactivar notificaciones">🔔</span>
+          <span id="notifStatus" style="font-size:10px;color:var(--dim)">NOTIFICACIONES: OFF</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tareas -->
+    <div class="widget visible" data-cat="productividad" style="--accent-w:#00cfff">
+      <div class="widget-header"><span class="widget-title">Gestor de Tareas</span><span class="widget-icon">📋</span></div>
+      <div class="task-input-row">
+        <input class="task-input" id="taskInput" placeholder="nueva tarea..." onkeydown="if(event.key==='Enter')addTask()">
+        <select class="priority-select" id="taskPriority">
+          <option value="high">ALTA</option>
+          <option value="med" selected>MEDIA</option>
+          <option value="low">BAJA</option>
+        </select>
+        <button class="btn sm info" onclick="addTask()">+</button>
+      </div>
+      <div class="task-list" id="taskList"></div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.75rem">
+        <button class="btn sm" onclick="clearDoneTasks()">LIMPIAR HECHAS</button>
+        <span style="font-size:10px;color:var(--dim);margin-left:auto;align-self:center" id="taskStats">0/0</span>
+      </div>
+    </div>
+
+    <!-- Diario con búsqueda -->
+    <div class="widget visible" data-cat="productividad" style="--accent-w:#8888ff">
+      <div class="widget-header"><span class="widget-title">Diario del Día</span><span class="widget-icon">📝</span></div>
+      <input class="diary-search" id="diarySearch" placeholder="🔍 buscar en el diario..." oninput="searchDiary()">
+      <div class="diary-entries" id="diaryEntries"></div>
+      <textarea class="diary-textarea" id="diaryInput" placeholder="¿cómo fue tu día?..."></textarea>
+      <div class="diary-actions">
+        <button class="btn sm" onclick="saveDiary()">GUARDAR ENTRADA</button>
+        <button class="btn sm danger" onclick="clearDiary()">LIMPIAR</button>
+      </div>
+    </div>
+
+    <!-- Notas -->
+    <div class="widget visible" data-cat="productividad" style="--accent-w:#ffcc00">
+      <div class="widget-header"><span class="widget-title">Notas Rápidas</span><span class="widget-icon">🗒️</span></div>
+      <textarea class="notes-area" id="notesArea" placeholder="escribe aquí lo que necesites...&#10;se guarda automáticamente" oninput="saveNotes()"></textarea>
+      <div class="notes-actions">
+        <button class="btn sm" onclick="copyNotes()">COPIAR</button>
+        <button class="btn sm danger" onclick="clearNotes()">LIMPIAR</button>
+        <span class="notes-count" id="notesCount">0 chars</span>
+      </div>
+    </div>
+
+    <!-- Hábitos -->
+    <div class="widget visible" data-cat="productividad" style="--accent-w:#00ff88">
+      <div class="widget-header"><span class="widget-title">Tracker de Hábitos</span><span class="widget-icon">🏆</span></div>
+      <div class="habit-list" id="habitList"></div>
+      <div class="habit-add-row">
+        <input class="habit-add-input" id="habitInput" placeholder="nuevo hábito..." onkeydown="if(event.key==='Enter')addHabit()">
+        <button class="btn sm" onclick="addHabit()">+</button>
+      </div>
+    </div>
+
+    <!-- Historial Emocional -->
+    <div class="widget visible" data-cat="utilidades" style="--accent-w:#00cfff">
+      <div class="widget-header"><span class="widget-title">Historial Emocional</span><span class="widget-icon">📊</span></div>
+      <div class="chart-wrap" id="histChart"></div>
+      <div class="history-list" id="historyList"></div>
+      <div style="display:flex;gap:0.5rem;margin-top:0.75rem">
+       <button class="btn sm info" onclick="exportJSON()">↓ JSON</button>
+<button class="btn sm" onclick="exportTXT()">↓ TXT</button>
+<button class="btn sm purple" onclick="exportPNG()">↓ PNG</button>
+      </div>
+    </div>
+
+    <!-- Calculadora -->
+    <div class="widget visible" data-cat="utilidades" style="--accent-w:#ff8800">
+      <div class="widget-header"><span class="widget-title">Calculadora</span><span class="widget-icon">🧮</span></div>
+      <div class="calc-display">
+        <div class="calc-expr" id="calcExpr"></div>
+        <div class="calc-val" id="calcVal">0</div>
+      </div>
+      <div class="calc-grid">
+        <button class="calc-key clr" onclick="calcClear()">C</button>
+        <button class="calc-key clr" onclick="calcDel()">⌫</button>
+        <button class="calc-key op" onclick="calcInput('%')">%</button>
+        <button class="calc-key op" onclick="calcInput('÷')">÷</button>
+        <button class="calc-key" onclick="calcInput('7')">7</button>
+        <button class="calc-key" onclick="calcInput('8')">8</button>
+        <button class="calc-key" onclick="calcInput('9')">9</button>
+        <button class="calc-key op" onclick="calcInput('×')">×</button>
+        <button class="calc-key" onclick="calcInput('4')">4</button>
+        <button class="calc-key" onclick="calcInput('5')">5</button>
+        <button class="calc-key" onclick="calcInput('6')">6</button>
+        <button class="calc-key op" onclick="calcInput('-')">−</button>
+        <button class="calc-key" onclick="calcInput('1')">1</button>
+        <button class="calc-key" onclick="calcInput('2')">2</button>
+        <button class="calc-key" onclick="calcInput('3')">3</button>
+        <button class="calc-key op" onclick="calcInput('+')">+</button>
+        <button class="calc-key span2" onclick="calcInput('0')">0</button>
+        <button class="calc-key" onclick="calcInput('.')">.</button>
+        <button class="calc-key eq" onclick="calcEquals()">=</button>
+      </div>
+    </div>
+
+    <!-- Sistema -->
+    <div class="widget visible" data-cat="utilidades" style="--accent-w:#00ff88">
+      <div class="widget-header"><span class="widget-title">Sistema moodOS</span><span class="widget-icon">💻</span></div>
+      <div class="sys-bar-row"><span class="sys-label">ÁNIMO</span><div class="sys-bar"><div class="sys-fill" id="sysMoodBar" style="background:var(--accent)"></div></div><span class="sys-val" id="sysMoodVal">—</span></div>
+      <div class="sys-bar-row"><span class="sys-label">ENERGÍA</span><div class="sys-bar"><div class="sys-fill" id="sysEnergyBar" style="background:#00cfff"></div></div><span class="sys-val" id="sysEnergyVal">—</span></div>
+      <div class="sys-bar-row"><span class="sys-label">ENFOQUE</span><div class="sys-bar"><div class="sys-fill" id="sysFocusBar" style="background:#ffcc00"></div></div><span class="sys-val" id="sysFocusVal">—</span></div>
+      <div class="sys-grid">
+        <div class="sys-stat"><div class="val" id="sysUptime">00:00:00</div><div class="lbl">UPTIME</div></div>
+        <div class="sys-stat"><div class="val" id="sysDate">—</div><div class="lbl">FECHA</div></div>
+        <div class="sys-stat"><div class="val" id="sysTasks">0</div><div class="lbl">TAREAS ACTIVAS</div></div>
+        <div class="sys-stat"><div class="val" id="sysNotes">0</div><div class="lbl">NOTAS GUARDADAS</div></div>
+      </div>
+    </div>
+
+    <!-- Heatmap -->
+    <div class="widget visible" data-cat="utilidades" style="--accent-w:#8888ff">
+      <div class="widget-header"><span class="widget-title">Clima Emocional — 30 días</span><span class="widget-icon">🗓️</span></div>
+      <div class="heatmap" id="heatmapGrid"></div>
+      <div class="heatmap-days">
+        <span class="heatmap-day">L</span><span class="heatmap-day">M</span>
+        <span class="heatmap-day">M</span><span class="heatmap-day">J</span>
+        <span class="heatmap-day">V</span><span class="heatmap-day">S</span>
+        <span class="heatmap-day">D</span>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:0.75rem;align-items:center;font-size:10px;color:var(--dim)">
+        <span>BAJO</span>
+        <div style="display:flex;gap:2px">
+          <div style="width:10px;height:10px;background:#111;border-radius:2px"></div>
+          <div style="width:10px;height:10px;background:#1a3326;border-radius:2px"></div>
+          <div style="width:10px;height:10px;background:#00663a;border-radius:2px"></div>
+          <div style="width:10px;height:10px;background:#00cc77;border-radius:2px"></div>
+          <div style="width:10px;height:10px;background:#00ff88;border-radius:2px"></div>
+        </div>
+        <span>ALTO</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="statusbar">
+    <div class="s-item"><div class="s-dot"></div><span id="sbMood">SISTEMA ACTIVO</span></div>
+    <div class="s-sep"></div>
+    <div class="s-item" id="sbTasks">TAREAS: 0/0</div>
+    <div class="s-sep"></div>
+    <div class="s-item" id="sbHabits">HÁBITOS: 0%</div>
+    <div class="s-sep"></div>
+    <div class="s-item" style="margin-left:auto">moodOS v2.0 · sebbi</div>
+  </div>
+</div>
+  
+<!-- CHANGELOG MODAL -->
+<div id="changelogModal">
+  <div class="changelog-box">
+    <button class="changelog-close" onclick="closeChangelog()">✕ CERRAR</button>
+    <h3>📋 ACTUALIZACIONES — moodOS</h3>
+    <div class="changelog-content" id="changelogContent"></div>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<script>
+// ══════════ STATE ══════════
+let currentMood = null;
+let breathTimer = null, breathPhase = 0, breathCycles = 0;
+let breathPattern = [4,4,4];
+let audioCtx = null, activeNodes = {};
+let masterGain = null;
+let pomoTimer = null, pomoSeconds = 25*60, pomoRunning = false;
+let pomoCycles = 0, pomoMode = 'work';
+let calcStr = '', calcNew = true;
+let quoteIdx = 0;
+let aiTone = 'motivacional';
+let meditateSeconds = 0, meditateInt = null;
+let sessionStart = Date.now();
+let sysInterval = null;
+let pomoNotifsEnabled = false;
+
+// ══════════ BOOT ══════════
+const bootLines = [
+  {text:'[INIT] moodOS kernel v2.0.0', cls:'ok'},
+  {text:'[LOAD] Emotional module...', cls:''},
+  {text:'[LOAD] AI Engine... OK', cls:'ok'},
+  {text:'[LOAD] System Widgets...', cls:''},
+  {text:'[LOAD] LocalStorage bridge... OK', cls:'ok'},
+  {text:'[WARN] Sleep manager not found', cls:'warn'},
+  {text:'[LOAD] Web Audio API... OK', cls:'ok'},
+  {text:'[LOAD] Pomodoro Engine... OK', cls:'ok'},
+  {text:'[LOAD] Habit Tracker... OK', cls:'ok'},
+  {text:'[LOAD] Browser Notifications... OK', cls:'ok'},
+  {text:'[INIT] Graphical interface... OK', cls:'ok'},
+  {text:'[SYS] All set. Welcome.', cls:'ok'},
+];
+let bootIdx = 0;
+function bootNext() {
+  if (bootIdx >= bootLines.length) {
+    document.getElementById('progressBar').style.width = '100%';
+    setTimeout(()=>{
+      document.getElementById('enterBtn').style.display = 'inline-block';
+document.getElementById('changelogBtn').style.display = 'inline-block';
+document.getElementById('portfolioBtn').style.opacity = '1';
+    }, 400);
+    return;
+  }
+  const log = document.getElementById('bootLog');
+  const pct = Math.round((bootIdx/bootLines.length)*100);
+  document.getElementById('progressBar').style.width = pct+'%';
+  const div = document.createElement('div');
+  div.className = 'line ' + bootLines[bootIdx].cls;
+  div.textContent = bootLines[bootIdx].text;
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  bootIdx++;
+  setTimeout(bootNext, 120 + Math.random()*200);
+}
+setTimeout(bootNext, 400);
+
+function enterOS() {
+  document.getElementById('boot').style.display = 'none';
+  document.getElementById('mood-select').style.display = 'flex';
+  initName();
+  // restore theme
+  if(localStorage.getItem('moodTheme')==='light') {
+    document.body.classList.add('light-mode');
+    document.getElementById('themeToggle').textContent = '☀️';
+  }
+}
+
+// ══════════ NAME ══════════
+function initName() {
+  const name = localStorage.getItem('moodUserName');
+  if (!name) {
+    document.getElementById('nameInputWrap').style.display = 'flex';
+    document.getElementById('moodGreeting').textContent = '// ¿quién eres?';
+  } else {
+    document.getElementById('moodGreeting').textContent = `// bienvenido de vuelta, ${name}`;
+  }
+}
+function saveName() {
+  const val = document.getElementById('nameInput').value.trim();
+  if (!val) return;
+  localStorage.setItem('moodUserName', val);
+  document.getElementById('nameInputWrap').style.display = 'none';
+  document.getElementById('moodGreeting').textContent = `// bienvenido, ${val}`;
+}
+
+// ══════════ THEME ══════════
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light-mode');
+  document.getElementById('themeToggle').textContent = isLight ? '☀️' : '🌙';
+  localStorage.setItem('moodTheme', isLight ? 'light' : 'dark');
+}
+
+// ══════════ MOOD ══════════
+const moodData = {
+  excellent:{name:'EXCELENTE',emoji:'🌟',color:'#00ff88',level:100,energy:95,focus:80},
+  good:     {name:'BIEN',     emoji:'😊',color:'#00cfff',level:75, energy:70,focus:75},
+  okay:     {name:'NORMAL',   emoji:'😐',color:'#ffcc00',level:50, energy:50,focus:60},
+  tired:    {name:'CANSADO',  emoji:'😴',color:'#ff8800',level:30, energy:20,focus:35},
+  anxious:  {name:'ANSIOSO',  emoji:'😰',color:'#ff3355',level:25, energy:60,focus:30},
+  sad:      {name:'TRISTE',   emoji:'😢',color:'#8888ff',level:20, energy:25,focus:25},
+  angry:    {name:'ENOJADO',  emoji:'😤',color:'#ff2200',level:15, energy:70,focus:20},
+  bored:    {name:'ABURRIDO', emoji:'🥱',color:'#888888',level:35, energy:35,focus:30},
+  focused:  {name:'ENFOCADO', emoji:'🎯',color:'#00ffff',level:80, energy:80,focus:95},
+};
+
+  // ══════════ CHANGELOG ══════════
+const changelogDefault = `v2.0.0 — Diciembre 2025
+═══════════════════════════════════
+✦ Lanzamiento oficial de moodOS v2.0
+✦ Exportación de datos en JSON y TXT
+✦ Exportación de resumen visual en PNG
+✦ Widget de IA con frases personalizadas
+✦ Tracker de hábitos semanal
+✦ Pomodoro con notificaciones del navegador
+✦ Sonidos ambient con Web Audio API
+✦ Modo claro / oscuro
+✦ Heatmap emocional de 30 días
+✦ Diario con búsqueda integrada
+✦ Respiración guiada con 4 patrones
+✦ Meditación con sesiones de 5 a 20 min
+✦ Botón de Actualizaciones en pantalla de boot
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+v3.0 — Próximamente...
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🧠 INTELIGENCIA & IA
+⟳ Análisis de patrones emocionales
+⟳ Chat conversacional con IA
+⟳ Recomendaciones automáticas según tu mood
+⟳ Resumen semanal con insights personales
+⟳ Detección de tendencias emocionales
+
+📊 DATOS & REPORTES
+⟳ Reporte mensual exportable en PDF
+⟳ Correlaciones entre hábitos y emociones
+⟳ Gráfico de tendencia emocional a largo plazo
+⟳ Estadísticas avanzadas — rachas, promedios
+⟳ Comparativa entre semanas
+
+Y MUCHO MÁS...`;
+
+function openChangelog() {
+  const saved = localStorage.getItem('moodChangelog') || changelogDefault;
+  document.getElementById('changelogContent').textContent = saved;
+  document.getElementById('changelogModal').classList.add('open');
+}
+function closeChangelog() {
+  document.getElementById('changelogModal').classList.remove('open');
+}
+
+function selectMood(el) {
+  currentMood = el.dataset.mood;
+  const data = moodData[currentMood];
+  document.documentElement.style.setProperty('--glow-color', data.color);
+  const history = JSON.parse(localStorage.getItem('moodHistory')||'[]');
+  history.unshift({mood:currentMood, time:Date.now()});
+  if(history.length > 200) history.pop();
+  localStorage.setItem('moodHistory', JSON.stringify(history));
+  document.getElementById('mood-select').style.display='none';
+  document.getElementById('os').style.display='block';
+  initOS();
+  const name = localStorage.getItem('moodUserName');
+  showNotif((name ? `¡Hola ${name}! ` : '') + 'Mood: '+data.name);
+}
+
+function changeMood() {
+  document.getElementById('mood-select').style.display='flex';
+  document.getElementById('os').style.display='none';
+  initName();
+}
+
+function initOS() {
+  const data = moodData[currentMood];
+  document.getElementById('moodEmoji').textContent = data.emoji;
+  document.getElementById('moodName').textContent = data.name;
+  document.getElementById('moodName').style.color = data.color;
+  document.getElementById('moodBar').style.width = data.level+'%';
+  document.getElementById('moodBar').style.background = data.color;
+  document.getElementById('taskbarMood').textContent = data.emoji+' '+data.name;
+  document.getElementById('taskbarMood').style.borderColor = data.color;
+  document.getElementById('taskbarMood').style.color = data.color;
+  updateStats(); updateHistory(); updateHeatmap();
+  loadTasks(); loadDiary(); loadNotes(); loadHabits(); loadIntentions();
+  generateAIQuote(); nextQuote(); startClock(); startSysMonitor();
+}
+
+function updateStats() {
+  const history = JSON.parse(localStorage.getItem('moodHistory')||'[]');
+  document.getElementById('statEntries').textContent = history.length;
+  const counts = {};
+  history.forEach(h=>counts[h.mood]=(counts[h.mood]||0)+1);
+  const best = Object.entries(counts).sort((a,b)=>b[1]-a[1])[0];
+  if(best) document.getElementById('statBest').textContent = moodData[best[0]].emoji;
+  let streak=0; const days=new Set(history.map(h=>new Date(h.time).toDateString()));
+  let d=new Date(); while(days.has(d.toDateString())){streak++;d.setDate(d.getDate()-1);}
+  document.getElementById('statStreak').textContent = streak;
+  const data = moodData[currentMood];
+  document.getElementById('sysMoodBar').style.width = data.level+'%'; document.getElementById('sysMoodVal').textContent = data.level+'%';
+  document.getElementById('sysEnergyBar').style.width = data.energy+'%'; document.getElementById('sysEnergyVal').textContent = data.energy+'%';
+  document.getElementById('sysFocusBar').style.width = data.focus+'%'; document.getElementById('sysFocusVal').textContent = data.focus+'%';
+  document.getElementById('sbMood').textContent = 'MOOD: '+data.name;
+  document.getElementById('sysDate').textContent = new Date().toLocaleDateString('es',{day:'2-digit',month:'2-digit'});
+}
+
+function updateHistory() {
+  const history = JSON.parse(localStorage.getItem('moodHistory')||'[]');
+  const wrap = document.getElementById('histChart'); wrap.innerHTML='';
+  const days = {};
+  history.forEach(h=>{ const d=new Date(h.time).toLocaleDateString('es',{weekday:'short'}); if(!days[d])days[d]=[]; days[d].push(h.mood); });
+  for(let i=6;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const k=d.toLocaleDateString('es',{weekday:'short'});
+    const entries=days[k]||[];
+    const avg=entries.length?entries.reduce((a,b)=>a+(moodData[b]?.level||50),0)/entries.length:0;
+    const bw=document.createElement('div'); bw.className='chart-bar-wrap';
+    const bar=document.createElement('div'); bar.className='chart-bar';
+    bar.style.height=Math.max(4,avg*0.8)+'px';
+    bar.style.background=avg>60?'#00ff88':avg>35?'#ffcc00':'#ff3355';
+    const lbl=document.createElement('div'); lbl.className='chart-label'; lbl.textContent=k.slice(0,3);
+    bw.appendChild(bar); bw.appendChild(lbl); wrap.appendChild(bw);
+  }
+  const list=document.getElementById('historyList'); list.innerHTML='';
+  history.slice(0,10).forEach(h=>{
+    const d=moodData[h.mood]; if(!d)return;
+    const item=document.createElement('div'); item.className='history-item';
+    const t=new Date(h.time).toLocaleString('es',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'2-digit'});
+    item.innerHTML=`<span class="h-time">${t}</span><span class="h-emoji">${d.emoji}</span><span class="h-name">${d.name}</span>`;
+    list.appendChild(item);
+  });
+}
+
+function updateHeatmap() {
+  const history = JSON.parse(localStorage.getItem('moodHistory')||'[]');
+  const grid = document.getElementById('heatmapGrid'); grid.innerHTML='';
+  for(let i=29;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const dayEntries=history.filter(h=>new Date(h.time).toDateString()===d.toDateString());
+    const avg=dayEntries.length?dayEntries.reduce((a,b)=>a+(moodData[b.mood]?.level||50),0)/dayEntries.length:0;
+    const cell=document.createElement('div'); cell.className='heatmap-cell';
+    const col=avg===0?'#111':avg<30?'#1a1a2a':avg<50?'#1a3326':avg<70?'#00663a':avg<90?'#00cc77':'#00ff88';
+    cell.style.background=col;
+    cell.title=d.toLocaleDateString('es')+': '+(dayEntries.length?Math.round(avg)+'%':'sin datos');
+    grid.appendChild(cell);
+  }
+}
+
+// ══════════ CLOCK ══════════
+function startClock() {
+  setInterval(()=>{
+    document.getElementById('clock').textContent=new Date().toLocaleTimeString('es',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  },1000);
+}
+function startSysMonitor() {
+  sysInterval = setInterval(()=>{
+    const sec=Math.floor((Date.now()-sessionStart)/1000);
+    const h=String(Math.floor(sec/3600)).padStart(2,'0');
+    const m=String(Math.floor(sec%3600/60)).padStart(2,'0');
+    const s=String(sec%60).padStart(2,'0');
+    document.getElementById('sysUptime').textContent=`${h}:${m}:${s}`;
+    document.getElementById('sysTasks').textContent=document.querySelectorAll('.task-item').length - document.querySelectorAll('.task-check.done').length;
+    document.getElementById('sysNotes').textContent=JSON.parse(localStorage.getItem('moodDiary')||'[]').length;
+  },1000);
+}
+
+// ══════════ FILTER ══════════
+function filterCategory(cat) {
+  document.querySelectorAll('.tb-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.widget').forEach(w=>{ w.style.display=(w.dataset.cat===cat)?'block':'none'; });
+  event.target.classList.add('active');
+}
+function toggleAll() {
+  document.querySelectorAll('.tb-btn').forEach(b=>b.classList.remove('active'));
+  event.target.classList.add('active');
+  document.querySelectorAll('.widget').forEach(w=>w.style.display='block');
+}
+
+// ══════════ BREATHING ══════════
+const patterns={'4-4-4':[4,4,4],'4-7-8':[4,7,8],'box':[4,4,4,4],'2-2':[2,2,2]};
+function setBreathPattern(btn,key) {
+  document.querySelectorAll('.breath-pattern-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); breathPattern=patterns[key]; stopBreath();
+}
+const phases=['INHALA','SOSTÉN','EXHALA','SOSTÉN'];
+function startBreath() { stopBreath(); breathCycles=0; breathPhase=-1; nextBreathPhase(); }
+function nextBreathPhase() {
+  breathPhase=(breathPhase+1)%breathPattern.length;
+  if(breathPhase===0&&breathCycles>0) document.getElementById('breathCycleInfo').textContent='CICLO '+breathCycles+' COMPLETADO';
+  if(breathPhase===0) breathCycles++;
+  const dur=breathPattern[breathPhase]; const lbl=phases[breathPhase]||'SOSTÉN';
+  const circle=document.getElementById('breathCircle');
+  document.getElementById('breathLabel').textContent=lbl;
+  document.getElementById('breathPhase').textContent=lbl.toLowerCase();
+  circle.className='breath-circle';
+  setTimeout(()=>{ circle.className='breath-circle '+(breathPhase===0?'inhale':breathPhase===breathPattern.length-1?'exhale':'hold'); },10);
+  let remaining=dur; document.getElementById('breathCount').textContent=remaining;
+  breathTimer=setInterval(()=>{ remaining--; document.getElementById('breathCount').textContent=remaining; if(remaining<=0){clearInterval(breathTimer);nextBreathPhase();} },1000);
+}
+function stopBreath() {
+  clearInterval(breathTimer); breathTimer=null;
+  document.getElementById('breathCircle').className='breath-circle';
+  document.getElementById('breathCount').textContent='—';
+  document.getElementById('breathPhase').textContent='detenido';
+  document.getElementById('breathCycleInfo').textContent='';
+}
+
+// ══════════ SOUNDS ══════════
+function getAudioCtx(){
+  if(!audioCtx){audioCtx=new(window.AudioContext||window.webkitAudioContext)();masterGain=audioCtx.createGain();masterGain.gain.value=0.5;masterGain.connect(audioCtx.destination);}
+  return audioCtx;
+}
+const soundConfigs={
+  rain:{type:'noise',filter:{type:'bandpass',frequency:800,Q:0.5}},
+  forest:{type:'noise',filter:{type:'bandpass',frequency:1200,Q:0.3}},
+  ocean:{type:'oscillator',frequency:0.1,type2:'sawtooth'},
+  fire:{type:'noise',filter:{type:'lowpass',frequency:300}},
+  space:{type:'oscillator',frequency:55,type2:'sine',detune:true},
+  cafe:{type:'noise',filter:{type:'bandpass',frequency:600,Q:0.2}},
+  thunder:{type:'noise',filter:{type:'lowpass',frequency:100}},
+  wind:{type:'noise',filter:{type:'bandpass',frequency:2000,Q:0.1}},
+  white:{type:'noise',filter:null},
+};
+function createNoise(ctx){const size=44100*2;const buf=ctx.createBuffer(1,size,ctx.sampleRate);const d=buf.getChannelData(0);for(let i=0;i<size;i++)d[i]=Math.random()*2-1;const s=ctx.createBufferSource();s.buffer=buf;s.loop=true;return s;}
+function toggleSound(btn){
+  const s=btn.dataset.sound;
+  if(activeNodes[s]){activeNodes[s].forEach(n=>{try{n.stop();}catch(e){}});delete activeNodes[s];btn.classList.remove('active');return;}
+  const ctx=getAudioCtx(); const cfg=soundConfigs[s]; const nodes=[];
+  const gainNode=ctx.createGain(); gainNode.gain.value=0.3; gainNode.connect(masterGain); nodes.push(gainNode);
+  if(cfg.type==='noise'){
+    const noise=createNoise(ctx); nodes.push(noise);
+    if(cfg.filter){const f=ctx.createBiquadFilter();f.type=cfg.filter.type;f.frequency.value=cfg.filter.frequency;if(cfg.filter.Q)f.Q.value=cfg.filter.Q;noise.connect(f);f.connect(gainNode);nodes.push(f);}
+    else{noise.connect(gainNode);}
+    noise.start();
+  }else{
+    const osc=ctx.createOscillator(); osc.type=cfg.type2||'sine'; osc.frequency.value=cfg.frequency||440;
+    if(cfg.detune){const lfo=ctx.createOscillator();const lgain=ctx.createGain();lfo.frequency.value=0.1;lgain.gain.value=10;lfo.connect(lgain);lgain.connect(osc.detune);lfo.start();nodes.push(lfo,lgain);}
+    osc.connect(gainNode); osc.start(); nodes.push(osc);
+  }
+  activeNodes[s]=nodes; btn.classList.add('active');
+}
+function setVolume(v){ document.getElementById('volDisplay').textContent=v+'%'; if(masterGain)masterGain.gain.value=v/100; }
+
+// ══════════ BROWSER NOTIFICATIONS ══════════
+function togglePomoNotif() {
+  if (!('Notification' in window)) { showNotif('Tu navegador no soporta notificaciones'); return; }
+  if (!pomoNotifsEnabled) {
+    Notification.requestPermission().then(perm => {
+      if (perm === 'granted') {
+        pomoNotifsEnabled = true;
+        document.getElementById('notifToggle').textContent = '🔔';
+        document.getElementById('notifStatus').textContent = 'NOTIFICACIONES: ON';
+        document.getElementById('notifStatus').style.color = 'var(--accent)';
+        showNotif('Notificaciones activadas ✓');
+      } else {
+        showNotif('Permiso denegado');
+      }
+    });
+  } else {
+    pomoNotifsEnabled = false;
+    document.getElementById('notifToggle').textContent = '🔕';
+    document.getElementById('notifStatus').textContent = 'NOTIFICACIONES: OFF';
+    document.getElementById('notifStatus').style.color = 'var(--dim)';
+    showNotif('Notificaciones desactivadas');
+  }
+}
+function sendBrowserNotif(title, body) {
+  if (pomoNotifsEnabled && Notification.permission === 'granted') {
+    new Notification('moodOS · ' + title, { body, icon: 'moodOS.png' });
+  }
+}
+
+// ══════════ POMODORO ══════════
+const pomoModes={work:{time:25*60,label:'TRABAJO'},short:{time:5*60,label:'PAUSA CORTA'},long:{time:15*60,label:'PAUSA LARGA'}};
+function setPomoMode(mode){
+  pomoMode=mode; pomoSeconds=pomoModes[mode].time; pomoRunning=false; clearInterval(pomoTimer);
+  document.querySelectorAll('[id^=pomoMode]').forEach(b=>b.classList.remove('active'));
+  document.getElementById('pomoMode'+mode.charAt(0).toUpperCase()+mode.slice(1)).classList.add('active');
+  document.getElementById('pomoPhase').textContent='// '+pomoModes[mode].label.toLowerCase();
+  renderPomoTime();
+}
+function renderPomoTime(){
+  const m=String(Math.floor(pomoSeconds/60)).padStart(2,'0');
+  const s=String(pomoSeconds%60).padStart(2,'0');
+  document.getElementById('pomoTime').textContent=m+':'+s;
+}
+function startPomo(){
+  if(pomoRunning)return; pomoRunning=true;
+  document.getElementById('pomoPhase').textContent='// '+pomoModes[pomoMode].label.toLowerCase();
+  pomoTimer=setInterval(()=>{
+    pomoSeconds--; renderPomoTime();
+    if(pomoSeconds<=0){
+      clearInterval(pomoTimer); pomoRunning=false;
+      if(pomoMode==='work'){pomoCycles++; document.querySelectorAll('.pomo-dot')[Math.min(pomoCycles-1,3)].classList.add('filled');}
+      document.getElementById('pomoCount').textContent='SESIÓN '+(pomoMode==='work'?pomoCycles:0)+' / 4';
+      document.getElementById('pomoPhase').textContent='// '+pomoModes[pomoMode].label+' COMPLETADO';
+      const msg = pomoModes[pomoMode].label+' completado!';
+      showNotif(msg);
+      sendBrowserNotif('⏱ '+pomoModes[pomoMode].label, '¡Sesión completada! Tiempo de '+(pomoMode==='work'?'descansar':'trabajar')+'.');
+      setPomoMode(pomoMode==='work'?(pomoCycles>=4?'long':'short'):'work');
+    }
+  },1000);
+}
+function pausePomo(){ if(!pomoRunning)return; pomoRunning=false; clearInterval(pomoTimer); document.getElementById('pomoPhase').textContent='// en pausa'; }
+function resetPomo(){
+  clearInterval(pomoTimer); pomoRunning=false; pomoCycles=0;
+  setPomoMode('work'); document.querySelectorAll('.pomo-dot').forEach(d=>d.classList.remove('filled'));
+}
+
+// ══════════ TASKS ══════════
+function loadTasks(){
+  const tasks=JSON.parse(localStorage.getItem('moodTasks')||'[]');
+  const list=document.getElementById('taskList'); list.innerHTML='';
+  tasks.forEach((t,i)=>renderTask(t,i)); updateTaskStats();
+}
+function renderTask(t,i){
+  const list=document.getElementById('taskList');
+  const item=document.createElement('div'); item.className='task-item';
+  item.innerHTML=`<div class="task-check${t.done?' done':''}" onclick="toggleTask(${i})"></div>
+  <span class="task-text${t.done?' done':''}">${t.text}</span>
+  <span class="task-priority ${t.priority}">${t.priority.toUpperCase()}</span>
+  <span class="task-del" onclick="deleteTask(${i})">✕</span>`;
+  list.appendChild(item);
+}
+function addTask(){
+  const inp=document.getElementById('taskInput'); if(!inp.value.trim())return;
+  const tasks=JSON.parse(localStorage.getItem('moodTasks')||'[]');
+  tasks.unshift({text:inp.value.trim(),done:false,priority:document.getElementById('taskPriority').value});
+  localStorage.setItem('moodTasks',JSON.stringify(tasks)); inp.value=''; loadTasks(); showNotif('Tarea añadida');
+}
+function toggleTask(i){ const tasks=JSON.parse(localStorage.getItem('moodTasks')||'[]'); tasks[i].done=!tasks[i].done; localStorage.setItem('moodTasks',JSON.stringify(tasks)); loadTasks(); }
+function deleteTask(i){ const tasks=JSON.parse(localStorage.getItem('moodTasks')||'[]'); tasks.splice(i,1); localStorage.setItem('moodTasks',JSON.stringify(tasks)); loadTasks(); }
+function clearDoneTasks(){ let tasks=JSON.parse(localStorage.getItem('moodTasks')||'[]'); tasks=tasks.filter(t=>!t.done); localStorage.setItem('moodTasks',JSON.stringify(tasks)); loadTasks(); }
+function updateTaskStats(){
+  const tasks=JSON.parse(localStorage.getItem('moodTasks')||'[]');
+  const done=tasks.filter(t=>t.done).length; const total=tasks.length;
+  document.getElementById('taskStats').textContent=done+'/'+total+' hechas';
+  document.getElementById('sbTasks').textContent='TAREAS: '+done+'/'+total;
+}
+
+// ══════════ DIARY + SEARCH ══════════
+function loadDiary(filter=''){
+  const entries=JSON.parse(localStorage.getItem('moodDiary')||'[]');
+  const list=document.getElementById('diaryEntries'); list.innerHTML='';
+  const filtered = filter ? entries.filter(e=>e.text.toLowerCase().includes(filter.toLowerCase())) : entries.slice(0,10);
+  filtered.slice(0,10).forEach(e=>{
+    const div=document.createElement('div'); div.className='diary-entry';
+    const d=moodData[e.mood]||{emoji:'📝'};
+    div.innerHTML=`<div class="time">${new Date(e.time).toLocaleString('es')}</div>
+    <div class="entry-mood">${d.emoji} ${d.name||'—'}</div>
+    <div class="text">${e.text}</div>`;
+    list.appendChild(div);
+  });
+  if(filter && filtered.length===0){
+    list.innerHTML='<div style="padding:8px;color:var(--dim);font-size:11px;">// sin resultados</div>';
+  }
+}
+function searchDiary(){
+  const q=document.getElementById('diarySearch').value;
+  loadDiary(q);
+}
+function saveDiary(){
+  const txt=document.getElementById('diaryInput').value.trim(); if(!txt)return;
+  const entries=JSON.parse(localStorage.getItem('moodDiary')||'[]');
+  entries.unshift({text:txt,time:Date.now(),mood:currentMood});
+  if(entries.length>50)entries.pop();
+  localStorage.setItem('moodDiary',JSON.stringify(entries));
+  document.getElementById('diaryInput').value=''; loadDiary(); showNotif('Entrada guardada');
+}
+function clearDiary(){ document.getElementById('diaryInput').value=''; }
+
+// ══════════ NOTES ══════════
+function loadNotes(){
+  const n=localStorage.getItem('moodNotes')||'';
+  document.getElementById('notesArea').value=n;
+  document.getElementById('notesCount').textContent=n.length+' chars';
+}
+function saveNotes(){ const v=document.getElementById('notesArea').value; localStorage.setItem('moodNotes',v); document.getElementById('notesCount').textContent=v.length+' chars'; }
+function copyNotes(){ navigator.clipboard.writeText(document.getElementById('notesArea').value); showNotif('Notas copiadas'); }
+function clearNotes(){ document.getElementById('notesArea').value=''; saveNotes(); }
+
+// ══════════ HABITS ══════════
+function loadHabits(){
+  const habits=JSON.parse(localStorage.getItem('moodHabits')||'[{"name":"Beber agua","days":[0,0,0,0,0,0,0]},{"name":"Ejercicio","days":[0,0,0,0,0,0,0]},{"name":"Leer","days":[0,0,0,0,0,0,0]}]');
+  renderHabits(habits);
+}
+function renderHabits(habits){
+  const list=document.getElementById('habitList'); list.innerHTML='';
+  habits.forEach((h,i)=>{
+    const item=document.createElement('div'); item.className='habit-item';
+    const streak=h.days.filter(d=>d).length;
+    const days7=['L','M','M','J','V','S','D'];
+    const daysHtml=h.days.map((d,j)=>`<div class="habit-day${d?' done':''}" onclick="toggleHabitDay(${i},${j})" title="${days7[j]}"></div>`).join('');
+    item.innerHTML=`<span class="habit-name">${h.name}</span><div class="habit-days">${daysHtml}</div><span class="habit-streak">${streak}/7</span>`;
+    list.appendChild(item);
+  });
+  const pct=habits.length?Math.round(habits.reduce((a,h)=>a+h.days.filter(d=>d).length,0)/(habits.length*7)*100):0;
+  document.getElementById('sbHabits').textContent='HÁBITOS: '+pct+'%';
+}
+function toggleHabitDay(hi,di){
+  const habits=JSON.parse(localStorage.getItem('moodHabits')||'[]');
+  habits[hi].days[di]=habits[hi].days[di]?0:1;
+  localStorage.setItem('moodHabits',JSON.stringify(habits)); renderHabits(habits);
+}
+function addHabit(){
+  const inp=document.getElementById('habitInput'); if(!inp.value.trim())return;
+  const habits=JSON.parse(localStorage.getItem('moodHabits')||'[]');
+  habits.push({name:inp.value.trim(),days:[0,0,0,0,0,0,0]});
+  localStorage.setItem('moodHabits',JSON.stringify(habits)); inp.value=''; loadHabits(); showNotif('Hábito añadido');
+}
+
+// ══════════ INTENTIONS ══════════
+function loadIntentions(){
+  const items=JSON.parse(localStorage.getItem('moodIntentions')||'[]').filter(i=>new Date(i.date).toDateString()===new Date().toDateString());
+  renderIntentions(items);
+}
+function renderIntentions(items){
+  const list=document.getElementById('intentionsList'); list.innerHTML='';
+  items.forEach((item,i)=>{
+    const div=document.createElement('div'); div.className='intention-item'+(item.done?' done':'');
+    div.innerHTML=`<div class="intention-tick${item.done?' done':''}" onclick="toggleIntention(${i})"></div><span>${item.text}</span>`;
+    list.appendChild(div);
+  });
+}
+function addIntention(){
+  const inp=document.getElementById('intentionInput'); if(!inp.value.trim())return;
+  const all=JSON.parse(localStorage.getItem('moodIntentions')||'[]');
+  const today=all.filter(i=>new Date(i.date).toDateString()===new Date().toDateString());
+  today.push({text:inp.value.trim(),done:false,date:Date.now()});
+  const other=all.filter(i=>new Date(i.date).toDateString()!==new Date().toDateString());
+  localStorage.setItem('moodIntentions',JSON.stringify([...today,...other]));
+  inp.value=''; loadIntentions(); showNotif('Intención añadida');
+}
+function toggleIntention(i){
+  const all=JSON.parse(localStorage.getItem('moodIntentions')||'[]');
+  const today=all.filter(x=>new Date(x.date).toDateString()===new Date().toDateString());
+  today[i].done=!today[i].done;
+  const other=all.filter(x=>new Date(x.date).toDateString()!==new Date().toDateString());
+  localStorage.setItem('moodIntentions',JSON.stringify([...today,...other])); loadIntentions();
+}
+
+// ══════════ AI ══════════
+const quotesFallback={
+  motivacional:[{t:'El único límite real es el que te pones a ti mismo.'},{t:'Cada mañana es una nueva oportunidad de construir la versión que quieres ser.'},{t:'No se trata de ser perfecto, sino de seguir intentando.'}],
+  filosofico:[{t:'Todo fluye. Lo que hoy te pesa, mañana es la base de tu fortaleza.'},{t:'La felicidad no está en la ausencia de problemas, sino en la capacidad de enfrentarlos.'},{t:'Vivir plenamente es elegir conscientemente qué hacer con el dolor.'}],
+  humor:[{t:'Sistema detectado: humano con poca batería. Solución: snack inmediato.'},{t:'Tu cerebro necesita actualización. Reiniciar con siesta de 20 minutos.'},{t:'Error 404: motivación no encontrada. Ejecutando protocolo de café.'}],
+  reflexivo:[{t:'¿Estás reaccionando a la vida o eligiendo cómo vivirla?'},{t:'Tu estado de ánimo es información, no condena. Escúchalo con curiosidad.'},{t:'A veces el silencio interno es la conversación más honesta.'}],
+  zen:[{t:'Este momento, exactamente como es, ya es suficiente.'},{t:'La mente tranquila no es una mente vacía, es una mente que sabe dónde descansar.'},{t:'No hay camino al bienestar. El bienestar es el camino.'}],
+};
+document.querySelectorAll('.ai-tag').forEach(t=>{
+  t.addEventListener('click',()=>{
+    document.querySelectorAll('.ai-tag').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active'); aiTone=t.dataset.tone; generateAIQuote();
+  });
+});
+async function generateAIQuote(){
+  const el=document.getElementById('aiText'); const cursor=document.getElementById('aiCursor');
+  el.textContent=''; cursor.style.display='inline-block';
+  const moodName=moodData[currentMood]?.name||'neutral';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:120,
+        messages:[{role:'user',content:`Dame un mensaje breve (máx 2 oraciones) en español, estilo ${aiTone}, para alguien que se siente ${moodName}. Solo el mensaje, sin comillas ni explicación.`}]})
+    });
+    const data=await res.json();
+    typewrite(el,data.content?.[0]?.text||getFallback(),cursor);
+  }catch(e){typewrite(el,getFallback(),cursor);}
+}
+function getFallback(){ const arr=quotesFallback[aiTone]||quotesFallback.motivacional; return arr[Math.floor(Math.random()*arr.length)].t; }
+function typewrite(el,text,cursor){
+  let i=0; el.textContent='';
+  const iv=setInterval(()=>{ el.textContent+=text[i]; i++; if(i>=text.length){clearInterval(iv);cursor.style.display='none';} },25);
+}
+
+// ══════════ QUOTES ══════════
+const quotes={
+  all:[{t:'El momento presente siempre será.',a:'Eckhart Tolle'},{t:'No es lo que te pasa, sino cómo reaccionas lo que importa.',a:'Epicteto'},{t:'En el medio del caos, también hay oportunidad.',a:'Sun Tzu'},{t:'La vida no se mide por respiraciones, sino por momentos que te dejan sin aliento.',a:'Maya Angelou'}],
+  estoica:[{t:'No busques que lo que sucede suceda como quieres, sino desea que sea como es.',a:'Epicteto'},{t:'No malgastes lo que te queda de vida en pensamientos sobre otras personas.',a:'Marco Aurelio'},{t:'La adversidad es la oportunidad de mostrar de qué estás hecho.',a:'Séneca'},{t:'Si buscas la tranquilidad, haz menos.',a:'Marco Aurelio'}],
+  zen:[{t:'El momento presente siempre será.',a:'Eckhart Tolle'},{t:'La mente del principiante tiene muchas posibilidades. La del experto, pocas.',a:'Shunryu Suzuki'},{t:'Antes de la iluminación, cortar leña y cargar agua. Después, lo mismo.',a:'Proverbio Zen'}],
+  ciencia:[{t:'La imaginación es más importante que el conocimiento.',a:'Albert Einstein'},{t:'Si no puedes explicarlo de manera simple, no lo entiendes lo suficiente.',a:'Richard Feynman'},{t:'Somos polvo de estrellas.',a:'Carl Sagan'}],
+  motivacion:[{t:'El éxito es la suma de pequeños esfuerzos repetidos día tras día.',a:'Robert Collier'},{t:'No cuentes los días, haz que los días cuenten.',a:'Muhammad Ali'},{t:'El futuro pertenece a quienes creen en la belleza de sus sueños.',a:'Eleanor Roosevelt'},{t:'Cae siete veces, levántate ocho.',a:'Proverbio japonés'}],
+};
+let currentQuoteCat='all';
+function setQuoteCat(btn,cat){ document.querySelectorAll('.quote-cat-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); currentQuoteCat=cat; quoteIdx=0; nextQuote(); }
+function nextQuote(){ const arr=quotes[currentQuoteCat]||quotes.all; const q=arr[quoteIdx%arr.length]; quoteIdx++; document.getElementById('quoteText').textContent=q.t; document.getElementById('quoteAuthor').textContent='— '+q.a; }
+
+// ══════════ CALCULATOR ══════════
+function calcInput(v){ if(calcNew&&!isNaN(v)&&v!=='.'){calcStr=v;calcNew=false;}else{calcStr+=v;} document.getElementById('calcVal').textContent=calcStr||'0'; document.getElementById('calcExpr').textContent=''; }
+function calcClear(){ calcStr=''; calcNew=false; document.getElementById('calcVal').textContent='0'; document.getElementById('calcExpr').textContent=''; }
+function calcDel(){ calcStr=calcStr.slice(0,-1); document.getElementById('calcVal').textContent=calcStr||'0'; }
+function calcEquals(){
+  try{
+    const expr=calcStr.replace('÷','/').replace('×','*').replace('−','-');
+    document.getElementById('calcExpr').textContent=calcStr+' =';
+    const result=Function('"use strict";return ('+expr+')')();
+    const r=parseFloat(result.toFixed(10)).toString();
+    document.getElementById('calcVal').textContent=r; calcStr=r; calcNew=true;
+  }catch(e){ document.getElementById('calcVal').textContent='ERROR'; }
+}
+
+// ══════════ MEDITATION ══════════
+function startMeditation(minutes,name){
+  clearInterval(meditateInt); meditateSeconds=minutes*60;
+  document.getElementById('meditateOrb').textContent='🧘';
+  const update=()=>{
+    const m=Math.floor(meditateSeconds/60); const s=meditateSeconds%60;
+    const phr=meditateSeconds%10<3?'Observa tu respiración...':meditateSeconds%10<6?'Deja ir los pensamientos...':'Permanece presente...';
+    document.getElementById('meditateText').textContent=`${name} · ${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}\n${phr}`;
+    if(meditateSeconds<=0){clearInterval(meditateInt);document.getElementById('meditateText').textContent='Sesión completada ✓\nBien hecho.';showNotif('Meditación completada!');sendBrowserNotif('🧘 Meditación','Sesión completada. ¡Bien hecho!');}
+    meditateSeconds--;
+  };
+  update(); meditateInt=setInterval(update,1000); showNotif(name+' iniciada · '+minutes+' min');
+}
+
+// ══════════ EXPORT ══════════
+function exportJSON(){
+  const data={
+    usuario:localStorage.getItem('moodUserName')||'anónimo',
+    exportado:new Date().toLocaleString('es'),
+    historialEmocional:JSON.parse(localStorage.getItem('moodHistory')||'[]'),
+    diario:JSON.parse(localStorage.getItem('moodDiary')||'[]'),
+    tareas:JSON.parse(localStorage.getItem('moodTasks')||'[]'),
+    habitos:JSON.parse(localStorage.getItem('moodHabits')||'[]'),
+    notas:localStorage.getItem('moodNotes')||''
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`moodOS_backup_${new Date().toISOString().slice(0,10)}.json`; a.click();
+  showNotif('Datos exportados como JSON');
+}
+function exportTXT(){
+  const name=localStorage.getItem('moodUserName')||'anónimo';
+  const history=JSON.parse(localStorage.getItem('moodHistory')||'[]');
+  const diary=JSON.parse(localStorage.getItem('moodDiary')||'[]');
+  let txt=`moodOS v2.0 — Reporte de ${name}\nExportado: ${new Date().toLocaleString('es')}\n${'═'.repeat(40)}\n\n`;
+  txt+=`HISTORIAL EMOCIONAL (${history.length} entradas)\n`;
+  history.slice(0,20).forEach(h=>{ const d=moodData[h.mood]; txt+=`  ${new Date(h.time).toLocaleString('es')} — ${d?.emoji} ${d?.name}\n`; });
+  txt+=`\n${'═'.repeat(40)}\n\nDIARIO (${diary.length} entradas)\n`;
+  diary.forEach(e=>{ txt+=`\n[${new Date(e.time).toLocaleString('es')}]\n${e.text}\n`; });
+  const blob=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=`moodOS_reporte_${new Date().toISOString().slice(0,10)}.txt`; a.click();
+  showNotif('Datos exportados como TXT');
+}
+
+async function exportPNG() {
+  showNotif('Generando resumen PNG...');
+
+  // Crear canvas de resumen
+  const canvas = document.createElement('canvas');
+  canvas.width = 800;
+  canvas.height = 600;
+  const ctx = canvas.getContext('2d');
+
+  const bg = '#000000';
+  const accent = moodData[currentMood]?.color || '#00ff88';
+  const name = localStorage.getItem('moodUserName') || 'anónimo';
+  const history = JSON.parse(localStorage.getItem('moodHistory') || '[]');
+  const tasks = JSON.parse(localStorage.getItem('moodTasks') || '[]');
+  const habits = JSON.parse(localStorage.getItem('moodHabits') || '[]');
+  const diary = JSON.parse(localStorage.getItem('moodDiary') || '[]');
+  const data = moodData[currentMood];
+
+  // Fondo
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, 800, 600);
+
+  // Scanlines decorativas
+  ctx.fillStyle = 'rgba(0,255,136,0.015)';
+  for (let y = 0; y < 600; y += 4) ctx.fillRect(0, y, 800, 2);
+
+  // Borde exterior
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 1;
+  ctx.strokeRect(16, 16, 768, 568);
+
+  // Header
+  ctx.fillStyle = accent;
+  ctx.fillRect(16, 16, 768, 56);
+  ctx.fillStyle = '#000';
+  ctx.font = 'bold 22px monospace';
+  ctx.fillText('moodOS v2.0 — RESUMEN EMOCIONAL', 32, 52);
+  ctx.font = '12px monospace';
+  ctx.fillStyle = '#000';
+  ctx.fillText(new Date().toLocaleString('es'), 580, 52);
+
+  // Nombre
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '13px monospace';
+  ctx.fillText('// usuario: ' + name, 32, 92);
+  ctx.fillStyle = accent;
+  ctx.fillText('// fecha: ' + new Date().toLocaleDateString('es'), 400, 92);
+
+  // Línea separadora
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.lineWidth = 1;
+  ctx.beginPath(); ctx.moveTo(32, 105); ctx.lineTo(768, 105); ctx.stroke();
+
+  // — Sección: Estado actual —
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('[ ESTADO ACTUAL ]', 32, 125);
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '32px monospace';
+  ctx.fillText(data.emoji, 32, 165);
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 20px monospace';
+  ctx.fillText(data.name, 72, 162);
+  ctx.fillStyle = '#555';
+  ctx.font = '11px monospace';
+  ctx.fillText('ÁNIMO: ' + data.level + '%  ENERGÍA: ' + data.energy + '%  ENFOQUE: ' + data.focus + '%', 72, 178);
+
+  // Barras de stats
+  const barY = 190;
+  [
+    { label: 'ÁNIMO', val: data.level, color: accent },
+    { label: 'ENERGÍA', val: data.energy, color: '#00cfff' },
+    { label: 'ENFOQUE', val: data.focus, color: '#ffcc00' },
+  ].forEach((bar, i) => {
+    const x = 32 + i * 230;
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x, barY, 200, 6);
+    ctx.fillStyle = bar.color;
+    ctx.fillRect(x, barY, bar.val * 2, 6);
+    ctx.fillStyle = '#555';
+    ctx.font = '10px monospace';
+    ctx.fillText(bar.label, x, barY + 18);
+  });
+
+  // Línea separadora
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.beginPath(); ctx.moveTo(32, 220); ctx.lineTo(768, 220); ctx.stroke();
+
+  // — Sección: Estadísticas —
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('[ ESTADÍSTICAS ]', 32, 240);
+
+  const counts = {};
+  history.forEach(h => counts[h.mood] = (counts[h.mood] || 0) + 1);
+  const best = Object.entries(counts).sort((a, b) => b[1] - a[1])[0];
+  let streak = 0;
+  const days = new Set(history.map(h => new Date(h.time).toDateString()));
+  let d = new Date();
+  while (days.has(d.toDateString())) { streak++; d.setDate(d.getDate() - 1); }
+  const doneTasks = tasks.filter(t => t.done).length;
+  const habitPct = habits.length
+    ? Math.round(habits.reduce((a, h) => a + h.days.filter(x => x).length, 0) / (habits.length * 7) * 100)
+    : 0;
+
+  const stats = [
+    { label: 'ENTRADAS MOOD', val: history.length },
+    { label: 'RACHA ACTUAL', val: streak + ' días' },
+    { label: 'MEJOR MOOD', val: best ? moodData[best[0]]?.emoji + ' ' + moodData[best[0]]?.name : '—' },
+    { label: 'TAREAS HECHAS', val: doneTasks + '/' + tasks.length },
+    { label: 'HÁBITOS SEMANA', val: habitPct + '%' },
+    { label: 'ENTRADAS DIARIO', val: diary.length },
+  ];
+  stats.forEach((s, i) => {
+    const col = i % 3; const row = Math.floor(i / 3);
+    const x = 32 + col * 245; const y = 260 + row * 50;
+    ctx.fillStyle = '#111';
+    ctx.fillRect(x, y, 230, 38);
+    ctx.strokeStyle = '#1a1a1a';
+    ctx.strokeRect(x, y, 230, 38);
+    ctx.fillStyle = accent;
+    ctx.font = 'bold 16px monospace';
+    ctx.fillText(String(s.val), x + 10, y + 22);
+    ctx.fillStyle = '#555';
+    ctx.font = '9px monospace';
+    ctx.fillText(s.label, x + 10, y + 34);
+  });
+
+  // Línea separadora
+  ctx.strokeStyle = '#1a1a1a';
+  ctx.beginPath(); ctx.moveTo(32, 368); ctx.lineTo(768, 368); ctx.stroke();
+
+  // — Sección: Historial visual (barras 7 días) —
+  ctx.fillStyle = accent;
+  ctx.font = 'bold 11px monospace';
+  ctx.fillText('[ HISTORIAL — ÚLTIMOS 7 DÍAS ]', 32, 388);
+
+  const dayMap = {};
+  history.forEach(h => {
+    const k = new Date(h.time).toLocaleDateString('es', { weekday: 'short' });
+    if (!dayMap[k]) dayMap[k] = [];
+    dayMap[k].push(h.mood);
+  });
+  for (let i = 6; i >= 0; i--) {
+    const dd = new Date(); dd.setDate(dd.getDate() - i);
+    const k = dd.toLocaleDateString('es', { weekday: 'short' });
+    const entries = dayMap[k] || [];
+    const avg = entries.length
+      ? entries.reduce((a, b) => a + (moodData[b]?.level || 50), 0) / entries.length
+      : 0;
+    const barH = Math.max(4, avg * 0.6);
+    const x = 32 + (6 - i) * 100;
+    const barColor = avg > 60 ? '#00ff88' : avg > 35 ? '#ffcc00' : avg > 0 ? '#ff3355' : '#222';
+    ctx.fillStyle = barColor;
+    ctx.fillRect(x, 460 - barH, 80, barH);
+    ctx.fillStyle = '#555';
+    ctx.font = '10px monospace';
+    ctx.fillText(k.slice(0, 3).toUpperCase(), x + 28, 472);
+    if (avg > 0) {
+      ctx.fillStyle = '#fff';
+      ctx.font = '9px monospace';
+      ctx.fillText(Math.round(avg) + '%', x + 28, 456 - barH);
+    }
+  }
+
+  // Footer
+  ctx.fillStyle = '#222';
+  ctx.fillRect(16, 558, 768, 26);
+  ctx.fillStyle = '#555';
+  ctx.font = '10px monospace';
+  ctx.fillText('moodOS v2.0 · generado el ' + new Date().toLocaleString('es') + ' · sebbi', 32, 575);
+
+  // Descargar
+  const link = document.createElement('a');
+  link.download = `moodOS_resumen_${new Date().toISOString().slice(0, 10)}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+  showNotif('✓ PNG exportado correctamente');
+}
+
+// ══════════ NOTIFICATION ══════════
+function showNotif(msg){
+  const n=document.getElementById('notif'); n.textContent='► '+msg; n.classList.add('show');
+  setTimeout(()=>n.classList.remove('show'),3000);
+}
+</script>
+</body>
+</html>
